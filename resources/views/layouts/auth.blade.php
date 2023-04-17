@@ -66,6 +66,24 @@
     <script src="{{ asset('theme/https://oss.maxcdn.com/respond/1.4.2/respond.min.js')}}"></script>
   <![endif]-->
   <script src="{{ asset('theme/plugins/nprogress/nprogress.js')}}"></script>
+
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
 </head>
 
 
@@ -92,9 +110,9 @@
           <div id="sidebar" class="sidebar sidebar-with-footer">
             <!-- Aplication Brand -->
             <div class="app-brand">
-              <a href="/index.html">
-                <img src="{{ asset('theme/images/logo.png')}}" alt="Mono">
-                <span class="brand-name">Techmion Logistics</span>
+              <a href="{{ route('dashboard') }}">
+                <img src="{{ asset('theme/images/logo.png')}}" alt="Techmion">
+                {{-- <span class="brand-name">Techmion Logistics</span> --}}
               </a>
             </div>
             <!-- begin sidebar scrollbar -->
@@ -105,7 +123,7 @@
 
 
                   <li
-                   class=""
+                   class="active"
                    >
                     <a class="sidenav-item-link" href="{{ route('dashboard') }}">
                       <i class="mdi mdi-briefcase-account-outline"></i>
