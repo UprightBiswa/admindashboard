@@ -2,12 +2,6 @@
 
 @section('content')
 
-
-<h1>hi</h1>
-
-
-
-
-
+<h1>customer view</h1>
 
 @endsection

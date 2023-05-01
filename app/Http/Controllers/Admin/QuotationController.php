@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
+use App\Models\Quotation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
-class ClientsController extends Controller
+
+class QuotationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +18,8 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        //
+        $quotations = Quotation::all();
+        return view('Admin.quotations.index', compact('quotations'));
     }
 
     /**
@@ -24,7 +29,8 @@ class ClientsController extends Controller
      */
     public function create()
     {
-        //
+        $customers = Customer::all();
+        return view('Admin.quotations.create',compact('customers'));
     }
 
     /**
@@ -35,7 +41,18 @@ class ClientsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+        $validateData = $request->validate([
+            'customer_id' => 'required',
+        ]);
+        $quotation = new Quotation($validateData);
+        $quotation->uuid = Str::uuid();
+        $quotation = Quotation::create($validateData);
+        $quotation->save();
+
+        return redirect('admin/quotations')->with('success','Quotation created successfully.');
+
     }
 
     /**

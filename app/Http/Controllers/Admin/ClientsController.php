@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class QuotationController extends Controller
+class ClientsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,9 @@ class QuotationController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.customers.index');
     }
+
 
     /**
      * Show the form for creating a new resource.

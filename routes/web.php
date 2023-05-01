@@ -2,7 +2,11 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\ClientsController;
+use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\QuotationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,13 +20,39 @@ use App\Http\Controllers\DashboardController;
 */
 
 Route::get('/', function () {
-   // return view('layouts.auth');
-   return view('auth.login');
-
+    return view('welcome');
 });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/item', [DashboardController::class, 'item'])->name('item');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::prefix('admin')->middleware(['auth'])->group(function(){
+    Route::get('/dashboard',[DashboardController::class,'index']);
+
+
+   //customer route
+   Route::controller(ClientsController::class)->group(function(){
+    Route::get('/customer','index');
+
+   });
+
+   //quotation route
+   Route::controller(QuotationController::class)->group(function(){
+    Route::get('/quotations','index');
+    Route::get('/quotations/create','create');
+    Route::post('/quotations','store');
+    Route::get('/quotations/{quotation}','show');
+    Route::get('/quotations/{quotation}/edit','edit');
+    Route::put('/quotations/{quotation}','update');
+    Route::delete('/quotations/{quotation}','destroy');
+
+   });
+
+    //invoice route
+    Route::controller(InvoiceController::class)->group(function(){
+        Route::get('/invoice','index');
+       });
+
+
+    });
