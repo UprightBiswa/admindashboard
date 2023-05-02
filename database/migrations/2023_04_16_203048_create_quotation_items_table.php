@@ -15,11 +15,14 @@ class CreateQuotationItemsTable extends Migration
     {
         Schema::create('quotation_items', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
             $table->foreignId('quotation_id')->constrained('quotations');
             $table->foreignId('service_id')->constrained('services');
-            $table->integer('quantity');
-            $table->double('rate', 8, 2);
-            $table->uuid('uuid')->unique();
+            $table->string('description');
+            $table->decimal('quantity', 10, 2);
+            $table->decimal('rate', 10, 2);
+            $table->decimal('tax_rate', 10, 2);
+            $table->decimal('amount', 10, 2);
             $table->timestamps();
         });
     }

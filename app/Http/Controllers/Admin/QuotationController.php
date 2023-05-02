@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Service;
 use App\Models\Customer;
 use App\Models\Quotation;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Models\QuotationItem;
+use App\Http\Controllers\Controller;
 
 
 class QuotationController extends Controller
@@ -19,7 +21,9 @@ class QuotationController extends Controller
     public function index()
     {
         $quotations = Quotation::all();
-        return view('Admin.quotations.index', compact('quotations'));
+        $quotationItems = QuotationItem::all();
+
+        return view('Admin.quotations.index', compact('quotations', 'quotationItems'));
     }
 
     /**
@@ -30,7 +34,8 @@ class QuotationController extends Controller
     public function create()
     {
         $customers = Customer::all();
-        return view('Admin.quotations.create',compact('customers'));
+        $services = Service::all();
+        return view('Admin.quotations.create',compact('customers', 'services'));
     }
 
     /**
@@ -42,17 +47,36 @@ class QuotationController extends Controller
     public function store(Request $request)
     {
 
-
-        $validateData = $request->validate([
-            'customer_id' => 'required',
-        ]);
-        $quotation = new Quotation($validateData);
+        $quotation = new Quotation();
+        $quotation->customer_id=$request->input('customer_id');
         $quotation->uuid = Str::uuid();
-        $quotation = Quotation::create($validateData);
         $quotation->save();
 
-        return redirect('admin/quotations')->with('success','Quotation created successfully.');
+        $serviceIds = $request->input('service_id');
+        $quantities = $request->input('quantity');
+        $descriptions= $request->input('descriptions');
+        $taxs= $request->input('tax');
+        $rates = $request->input('rate');
 
+        foreach ($serviceIds as $key => $serviceId){
+                $service = Service::findOrFail($serviceId);
+
+                $qAmount = $quantities[$key] * $rates[$key];
+                $totaltax =  $qAmount * ($taxs[$key]/100);
+                $totalAmount= $qAmount+$totaltax;
+
+            $quotationItem = new QuotationItem();
+            $quotationItem->uuid = Str::uuid();
+            $quotationItem->quotation_id = $quotation->id;
+            $quotationItem->service_id = $serviceId;
+            $quotationItem->quantity = $quantities[$key];
+            $quotationItem->rate = $rates[$key];
+            $quotationItem->description =$descriptions[$key] ;
+            $quotationItem->tax_rate =$taxs[$key] ;
+            $quotationItem->amount = $totalAmount;
+            $quotationItem->save();
+        }
+        return redirect('admin/quotations')->with('success', 'Quotation created successfully.');
     }
 
     /**
@@ -61,9 +85,9 @@ class QuotationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Quotation $quotation)
     {
-        //
+        return view('Admin.quotations.show', compact('quotation'));
     }
 
     /**
@@ -72,7 +96,7 @@ class QuotationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Quotation $quotation)
     {
         //
     }
@@ -84,7 +108,7 @@ class QuotationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Quotation $quotation)
     {
         //
     }
@@ -95,8 +119,12 @@ class QuotationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Quotation $quotation)
     {
-        //
+        $quotation->quotationItems()->delete();
+        $quotation->delete();
+
+        return redirect('admin/quotations')
+            ->with('success', 'Quotation deleted successfully.');
     }
 }

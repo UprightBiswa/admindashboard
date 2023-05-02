@@ -13,6 +13,7 @@
     <link href="{{ asset('theme/https://fonts.googleapis.com/css?family=Karla:400,700|Roboto') }}" rel="stylesheet">
     <link href="{{ asset('theme/plugins/material/css/materialdesignicons.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('theme/plugins/simplebar/simplebar.css') }}" rel="stylesheet" />
+
     <!-- PLUGINS CSS STYLE -->
     <link href="{{ asset('theme/plugins/nprogress/nprogress.css') }}" rel="stylesheet" />
     <link href="{{ asset('theme/plugins/DataTables/DataTables-1.10.18/css/jquery.dataTables.min.css') }}"
@@ -34,6 +35,14 @@
     <script src="{{ asset('theme/https://oss.maxcdn.com/respond/1.4.2/respond.min.js') }}"></script>
   <![endif]-->
     <script src="{{ asset('theme/plugins/nprogress/nprogress.js') }}"></script>
+<style>
+    .invoice-theme-wrapper {
+    position: relative;
+    width: 80%;
+    margin: 0 20px 0 0;
+    overflow: hidden;
+    }
+</style>
 </head>
 
 <body class="navbar-fixed sidebar-fixed" id="body">
