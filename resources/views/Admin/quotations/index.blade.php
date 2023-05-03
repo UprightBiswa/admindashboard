@@ -45,7 +45,7 @@
                 <tr>
                     <th>Customer Name</th>
                     <th>Date</th>
-                    <th>Total Rate</th>
+                    <th>Total Amount</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -61,7 +61,7 @@
                         </td>
                         <td>
                             <a href="{{ url('admin/quotations', $quotation) }}" class="btn btn-sm btn-info">View</a>
-                            <a href="{{ url('admin/quotations/edit', $quotation) }}" class="btn btn-sm btn-primary">Edit</a>
+                            <a href="{{ url('admin/quotations/'.$quotation->id.'/edit') }}" class="btn btn-sm btn-primary">Edit</a>
                             <form action="{{ url('admin/quotations', $quotation) }}" method="POST" style="display:inline">
                                 @csrf
                                 @method('DELETE')
@@ -74,3 +74,4 @@
         </table>
     </div>
   @endsection
+
