@@ -1,63 +1,52 @@
 @extends('layouts.auth')
 
 @section('content')
-  {{-- <h1>Quotaton</h1>
-  <div class="card-header">
-    <h3>Quotation
-        <a href="{{ url('admin/quotations/create') }}" class="btn btn-primary btn-sm text-white float-end">Add Quotation</a>
-    </h3>
-</div> --}}
-{{-- <h1>Quotations</h1>
-    <a href="{{ url('admin/quotations/create') }}" class="btn btn-primary">New Quotation</a>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($quotations as $quotation)
-                <tr>
-                    <td>{{ $quotation->customer->name }}</td>
-                    <td>{{ $quotation->created_at }}</td>
-                    <td>
-                        <a href="{{ url('admin/quotations.show', $quotation) }}" class="btn btn-primary">View</a>
-                        <a href="{{ url('admin/quotations.edit', $quotation) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ url('admin/quotations.destroy', $quotation) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table> --}}
-    <h1>Quotations</h1>
-    <a href="{{ url('admin/quotations/create') }}" class="btn btn-primary">New Quotation</a>
+
+<div class="p-3 mb-2 bg-gradient-primary text-white text-center">
+    <h3 class="bg-primary d-inline-block px-3 py-2 rounded">Quotations</h3>
+  </div>
     <div class="container">
-        <h1>Quotations</h1>
-        <table class="table">
-            <thead>
+        <div class="row">
+            <div class="col-sm-9"><h5 >All Quotations Details</h5></div>
+            <div class="col-sm-2" ><a href="{{ url('admin/quotations/create') }}" class="btn btn-sm btn-primary mb-3 ">New Quotation</a></div>
+        </div>
+
+
+        <table class="table table-striped table-borderless">
+            <thead style="background-color:#84B0CA ;" class="text-white">
                 <tr>
+                    <th>#</th>
                     <th>Customer Name</th>
                     <th>Date</th>
+                    <th>Quantity</th>
                     <th>Total Amount</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($quotations as $quotation )
+                @foreach($quotations as $index =>  $quotation )
                     <tr>
+                        <td>{{ $index + 1  }}</td>
                         <td>{{ $quotation->customer->name }}</td>
                         <td>{{ $quotation->created_at }}</td>
                         <td>
-                            @foreach($quotation->quotationItems as $quotationItem)
-                            {{ $quotationItem->amount }}
-                            @endforeach
+                            @php
+                            $totalQuantity = 0;
+                            foreach($quotation->quotationItems as $quotationItem) {
+                                $totalQuantity += $quotationItem->quantity;
+                            }
+                            echo $totalQuantity;
+                        @endphp
+                        </td>
+                        <td>
+                            @php
+                            $totalAmount = 0;
+                            foreach($quotation->quotationItems as $quotationItem) {
+                                $totalAmount += $quotationItem->quantity * $quotationItem->rate;
+                            }
+                            echo $totalAmount;
+                        @endphp
                         </td>
                         <td>
                             <a href="{{ url('admin/quotations', $quotation) }}" class="btn btn-sm btn-info">View</a>
@@ -73,5 +62,10 @@
             </tbody>
         </table>
     </div>
+
+
+
+
+
   @endsection
 

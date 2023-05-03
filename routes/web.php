@@ -46,6 +46,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function(){
     Route::get('/quotations/{quotation}/edit','edit');
     Route::put('/quotations/{quotation}','update');
     Route::delete('/quotations/{quotation}','destroy');
+    Route::get('/quotations/pdf/{quotation}','pdf');
 
    });
 
@@ -56,3 +57,4 @@ Route::prefix('admin')->middleware(['auth'])->group(function(){
 
 
     });
+

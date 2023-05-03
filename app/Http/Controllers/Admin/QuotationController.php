@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\QuotationItem;
 use App\Http\Controllers\Controller;
-
+use pdf;
 
 class QuotationController extends Controller
 {
@@ -112,89 +112,89 @@ class QuotationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    // public function update(Request $request, $id){
+    public function update(Request $request, $id){
 
-    //     $quotation = Quotation::findOrFail($id);
-    //     $quotation->customer_id=$request->input('customer_id');
-    //     $quotation->save();
-
-    //     $serviceIds = $request->input('service_id');
-    //     $quantities = $request->input('quantity');
-    //     $description= $request->input('description');
-    //     $taxs= $request->input('tax_rate');
-    //     $rates = $request->input('rate');
-
-    //     $quotationItems = $quotation->quotationitems;
-    //     foreach ($quotationItems as $key => $quotationItem) {
-    //         $quotationItem->service_id = $serviceIds[$key];
-    //         $quotationItem->quantity = $quantities[$key];
-    //         $quotationItem->description =$description[$key] ;
-    //         $quotationItem->tax_rate =$taxs[$key] ;
-    //         $quotationItem->rate = $rates[$key];
-    //         $qAmount = $quantities[$key] * $rates[$key];
-    //         $totaltax =  $qAmount * ($taxs[$key]/100);
-    //         $totalAmount= $qAmount+$totaltax;
-    //         $quotationItem->amount = $totalAmount;
-    //         $quotationItem->save();
-    //     }
-
-    //     $newServiceIds = $request->input('service_id');
-    //     $newQuantities = $request->input('quantity');
-    //     $newDescriptions= $request->input('descriptions');
-    //     $newTaxs= $request->input('tax_rate');
-    //     $newRates = $request->input('rate');
-
-    //     for ($i = count($quotationItems); $i < count($newServiceIds); $i++) {
-    //         $service = Service::findOrFail($newServiceIds[$i]);
-    //         $qAmount = $newQuantities[$i] * $newRates[$i];
-    //         $totaltax =  $qAmount * ($newTaxs[$i]/100);
-    //         $totalAmount= $qAmount+$totaltax;
-
-    //         $quotationItem = new QuotationItem();
-    //         $quotationItem->uuid = Str::uuid();
-    //         $quotationItem->quotation_id = $quotation->id;
-    //         $quotationItem->service_id = $newServiceIds[$i];
-    //         $quotationItem->quantity = $newQuantities[$i];
-    //         $quotationItem->rate = $newRates[$i];
-    //         $quotationItem->description =$newDescriptions[$i] ;
-    //         $quotationItem->tax_rate =$newTaxs[$i] ;
-    //         $quotationItem->amount = $totalAmount;
-    //         $quotationItem->save();
-    //     }
-
-    //       return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
-    //     }
-
-    public function update(Request $request, $id)
-    {
         $quotation = Quotation::findOrFail($id);
-        $quotation->customer_id = $request->input('customer_id');
+        $quotation->customer_id=$request->input('customer_id');
         $quotation->save();
 
         $serviceIds = $request->input('service_id');
         $quantities = $request->input('quantity');
-        $description = $request->input('description');
-        $taxs = $request->input('tax_rate');
+        $description= $request->input('description');
+        $taxs= $request->input('tax_rate');
         $rates = $request->input('rate');
 
         $quotationItems = $quotation->quotationitems;
-
         foreach ($quotationItems as $key => $quotationItem) {
             $quotationItem->service_id = $serviceIds[$key];
             $quotationItem->quantity = $quantities[$key];
-            $quotationItem->description = $description[$key];
-            $quotationItem->tax_rate = $taxs[$key];
+            $quotationItem->description =$description[$key] ;
+            $quotationItem->tax_rate =$taxs[$key] ;
             $quotationItem->rate = $rates[$key];
             $qAmount = $quantities[$key] * $rates[$key];
-            $totaltax = $qAmount * ($taxs[$key] / 100);
-            $totalAmount = $qAmount + $totaltax;
+            $totaltax =  $qAmount * ($taxs[$key]/100);
+            $totalAmount= $qAmount+$totaltax;
             $quotationItem->amount = $totalAmount;
             $quotationItem->save();
         }
 
+        $newServiceIds = $request->input('service_id');
+        $newQuantities = $request->input('quantity');
+        $newDescriptions= $request->input('description');
+        $newTaxs= $request->input('tax_rate');
+        $newRates = $request->input('rate');
 
-        return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
-    }
+        for ($i = count($quotationItems); $i < count($newServiceIds); $i++) {
+            $service = Service::findOrFail($newServiceIds[$i]);
+            $qAmount = $newQuantities[$i] * $newRates[$i];
+            $totaltax =  $qAmount * ($newTaxs[$i]/100);
+            $totalAmount= $qAmount+$totaltax;
+
+            $quotationItem = new QuotationItem();
+            $quotationItem->uuid = Str::uuid();
+            $quotationItem->quotation_id = $quotation->id;
+            $quotationItem->service_id = $newServiceIds[$i];
+            $quotationItem->quantity = $newQuantities[$i];
+            $quotationItem->rate = $newRates[$i];
+            $quotationItem->description =$newDescriptions[$i] ;
+            $quotationItem->tax_rate =$newTaxs[$i] ;
+            $quotationItem->amount = $totalAmount;
+            $quotationItem->save();
+        }
+
+          return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
+        }
+
+    // public function update(Request $request, $id)
+    // {
+    //     $quotation = Quotation::findOrFail($id);
+    //     $quotation->customer_id = $request->input('customer_id');
+    //     $quotation->save();
+
+    //     $serviceIds = $request->input('service_id');
+    //     $quantities = $request->input('quantity');
+    //     $description = $request->input('description');
+    //     $taxs = $request->input('tax_rate');
+    //     $rates = $request->input('rate');
+
+    //     $quotationItems = $quotation->quotationitems;
+
+    //     foreach ($quotationItems as $key => $quotationItem) {
+    //         $quotationItem->service_id = $serviceIds[$key];
+    //         $quotationItem->quantity = $quantities[$key];
+    //         $quotationItem->description = $description[$key];
+    //         $quotationItem->tax_rate = $taxs[$key];
+    //         $quotationItem->rate = $rates[$key];
+    //         $qAmount = $quantities[$key] * $rates[$key];
+    //         $totaltax = $qAmount * ($taxs[$key] / 100);
+    //         $totalAmount = $qAmount + $totaltax;
+    //         $quotationItem->amount = $totalAmount;
+    //         $quotationItem->save();
+    //     }
+
+
+    //     return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
+    // }
 
 
     /**
@@ -211,4 +211,14 @@ class QuotationController extends Controller
         return redirect('admin/quotations')
             ->with('success', 'Quotation deleted successfully.');
     }
+
+    public function pdf(Quotation $quotation)
+    {
+
+        $customers = Customer::all();
+        $services = Service::all();
+
+        return view('Admin.quotations.pdf', compact('quotation', 'customers', 'services'));
+    }
+
 }

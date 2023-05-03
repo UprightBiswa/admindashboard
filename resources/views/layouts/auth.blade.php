@@ -35,17 +35,10 @@
     <script src="{{ asset('theme/https://oss.maxcdn.com/respond/1.4.2/respond.min.js') }}"></script>
   <![endif]-->
     <script src="{{ asset('theme/plugins/nprogress/nprogress.js') }}"></script>
-<style>
-    .invoice-theme-wrapper {
-    position: relative;
-    width: 80%;
-    margin: 0 20px 0 0;
-    overflow: hidden;
-    }
-</style>
+
 </head>
 
-<body class="navbar-fixed sidebar-fixed" id="body">
+<body  class="navbar-fixed sidebar-fixed" id="body" style="background: linear-gradient(90deg, rgb(147, 121, 152) 0%, rgb(255, 255, 255) 87%, rgb(155, 155, 155) 100%);">
 
     <!-- ====================================
     ——— WRAPPER
@@ -54,8 +47,8 @@
         <!-- ====================================
           ——— LEFT SIDEBAR WITH OUT FOOTER
         ===================================== -->
-        <aside class="left-sidebar sidebar-dark" id="left-sidebar">
-            <div id="sidebar" class="sidebar sidebar-with-footer">
+        <aside class="left-sidebar" id="left-sidebar">
+            <div id="sidebar" class="sidebar sidebar-with-footer" style="background: linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(220, 220, 220) 65%, rgb(155, 155, 155) 100%);";
                 <!-- Aplication Brand -->
                 <div class="app-brand">
                     <a href="{{ url('home') }}">
@@ -112,7 +105,7 @@
 
             <!-- Header -->
             <header class="main-header" id="header">
-                <nav class="navbar navbar-expand-lg navbar-light" id="navbar">
+                <nav class="navbar navbar-expand-lg navbar-light" style="background: linear-gradient(90deg, rgb(159, 159, 159) 0%, rgb(255, 255, 255) 50%, rgb(155, 155, 155) 100%);" id="navbar">
                     <!-- Sidebar toggle button -->
                     <button id="sidebar-toggler" class="sidebar-toggle"></button>
                     <span class="page-title">dashboard</span>
@@ -125,7 +118,7 @@
                                         class="user-image rounded-circle" alt="User Image" />
                                     <span class="d-none d-lg-inline-block">biswajit das</span>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-right">
+                                <ul class="dropdown-menu dropdown-menu-right" style="background: linear-gradient(90deg, rgb(215, 194, 229) 0%, rgb(255, 255, 255) 50%, rgb(206, 204, 202) 100%);">
                                     <li>
                                         <a class="dropdown-link-item" href="#">
                                             <i class="mdi mdi-account-outline"></i>
