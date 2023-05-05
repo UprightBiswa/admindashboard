@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\InvoiceController;
+use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\QuotationController;
 
@@ -33,8 +34,25 @@ Route::prefix('admin')->middleware(['auth'])->group(function(){
 
    //customer route
    Route::controller(ClientsController::class)->group(function(){
-    Route::get('/customer','index');
+    Route::get('/customers','index');
+    Route::get('/customers/create','create');
+    Route::post('/customers','store');
+    Route::get('/customers/{customer}','show');
+    Route::get('/customers/{customer}/edit','edit');
+    Route::put('/customers/{customer}','update');
+    Route::delete('/customers/{customer}','destroy');
+   });
 
+
+   //service route
+   Route::controller(ServiceController::class)->group(function(){
+    Route::get('/services','index');
+    Route::get('/services/create','create');
+    Route::post('/services','store');
+    Route::get('/services/{service}','show');
+    Route::get('/services/{service}/edit','edit');
+    Route::put('/services/{service}','update');
+    Route::delete('/services/{service}','destroy');
    });
 
    //quotation route

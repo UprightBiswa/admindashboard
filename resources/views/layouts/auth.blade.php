@@ -35,10 +35,18 @@
     <script src="{{ asset('theme/https://oss.maxcdn.com/respond/1.4.2/respond.min.js') }}"></script>
   <![endif]-->
     <script src="{{ asset('theme/plugins/nprogress/nprogress.js') }}"></script>
+    {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> --}}
+
 
 </head>
 
-<body  class="navbar-fixed sidebar-fixed" id="body" style="background: linear-gradient(90deg, rgb(147, 121, 152) 0%, rgb(255, 255, 255) 87%, rgb(155, 155, 155) 100%);">
+<body  class="navbar-fixed sidebar-fixed" id="body" style="background: linear-gradient(90deg, rgb(186, 171, 248) 0%, rgb(211, 211, 211) 67%, rgb(217, 218, 221) 100%);">
 
     <!-- ====================================
     ——— WRAPPER
@@ -48,7 +56,7 @@
           ——— LEFT SIDEBAR WITH OUT FOOTER
         ===================================== -->
         <aside class="left-sidebar" id="left-sidebar">
-            <div id="sidebar" class="sidebar sidebar-with-footer" style="background: linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(220, 220, 220) 65%, rgb(155, 155, 155) 100%);";
+            <div id="sidebar" class="sidebar sidebar-with-footer" style="background: linear-gradient(90deg, rgb(86, 175, 253) 0%, rgb(56, 162, 255) 65%, rgb(92, 119, 251) 100%);";
                 <!-- Aplication Brand -->
                 <div class="app-brand">
                     <a href="{{ url('home') }}">
@@ -64,29 +72,35 @@
                         <li >
                             <a class="sidenav-item-link" href="{{ url('admin/dashboard') }}">
                                 <i class="mdi mdi-briefcase-account-outline"></i>
-                                <span class="nav-text">dashboard</span>
+                                <span class="text-dark">dashboard</span>
                             </a>
                         </li>
 
 
                         <li >
-                            <a class="sidenav-item-link" href="{{ url('admin/customer') }}">
+                            <a class="sidenav-item-link" href="{{ url('admin/customers') }}">
                                 <i class="mdi mdi-briefcase-account-outline"></i>
-                                <span class="nav-text">customer</span>
+                                <span class="text-dark">customer</span>
+                            </a>
+                        </li>
+                        <li >
+                            <a class="sidenav-item-link" href="{{ url('admin/services') }}">
+                                <i class="mdi mdi-briefcase-account-outline"></i>
+                                <span class="text-dark">service</span>
                             </a>
                         </li>
 
                         <li>
                             <a class="sidenav-item-link" href="{{ url('admin/invoice') }}">
                                 <i class="mdi mdi-chart-line"></i>
-                                <span class="nav-text">invoice</span>
+                                <span class="text-dark">invoice</span>
                             </a>
                         </li>
 
                         <li>
                             <a class="sidenav-item-link" href="{{ url('admin/quotations') }}">
                                 <i class="mdi mdi-briefcase-account-outline"></i>
-                                <span class="nav-text"> quotation</span>
+                                <span class="text-dark"> quotation</span>
                             </a>
                         </li>
 
@@ -105,7 +119,7 @@
 
             <!-- Header -->
             <header class="main-header" id="header">
-                <nav class="navbar navbar-expand-lg navbar-light" style="background: linear-gradient(90deg, rgb(159, 159, 159) 0%, rgb(255, 255, 255) 50%, rgb(155, 155, 155) 100%);" id="navbar">
+                <nav class="navbar navbar-expand-lg navbar-light" style="background: linear-gradient(90deg, rgb(129, 207, 255) 0%, rgb(82, 136, 244) 50%, rgb(155, 155, 155) 100%);" id="navbar">
                     <!-- Sidebar toggle button -->
                     <button id="sidebar-toggler" class="sidebar-toggle"></button>
                     <span class="page-title">dashboard</span>
@@ -118,7 +132,7 @@
                                         class="user-image rounded-circle" alt="User Image" />
                                     <span class="d-none d-lg-inline-block">biswajit das</span>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-right" style="background: linear-gradient(90deg, rgb(215, 194, 229) 0%, rgb(255, 255, 255) 50%, rgb(206, 204, 202) 100%);">
+                                <ul class="dropdown-menu dropdown-menu-right" style="background: linear-gradient(90deg, rgb(62, 91, 255) 0%, rgb(1, 59, 204) 50%, rgb(0, 33, 151) 100%);">
                                     <li>
                                         <a class="dropdown-link-item" href="#">
                                             <i class="mdi mdi-account-outline"></i>

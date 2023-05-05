@@ -165,38 +165,6 @@ class QuotationController extends Controller
           return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
         }
 
-    // public function update(Request $request, $id)
-    // {
-    //     $quotation = Quotation::findOrFail($id);
-    //     $quotation->customer_id = $request->input('customer_id');
-    //     $quotation->save();
-
-    //     $serviceIds = $request->input('service_id');
-    //     $quantities = $request->input('quantity');
-    //     $description = $request->input('description');
-    //     $taxs = $request->input('tax_rate');
-    //     $rates = $request->input('rate');
-
-    //     $quotationItems = $quotation->quotationitems;
-
-    //     foreach ($quotationItems as $key => $quotationItem) {
-    //         $quotationItem->service_id = $serviceIds[$key];
-    //         $quotationItem->quantity = $quantities[$key];
-    //         $quotationItem->description = $description[$key];
-    //         $quotationItem->tax_rate = $taxs[$key];
-    //         $quotationItem->rate = $rates[$key];
-    //         $qAmount = $quantities[$key] * $rates[$key];
-    //         $totaltax = $qAmount * ($taxs[$key] / 100);
-    //         $totalAmount = $qAmount + $totaltax;
-    //         $quotationItem->amount = $totalAmount;
-    //         $quotationItem->save();
-    //     }
-
-
-    //     return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
-    // }
-
-
     /**
      * Remove the specified resource from storage.
      *

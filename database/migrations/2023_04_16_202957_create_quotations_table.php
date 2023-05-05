@@ -16,7 +16,9 @@ class CreateQuotationsTable extends Migration
         Schema::create('quotations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers');
-            $table->date('date');
+            $table->date('issue_date');
+            $table->date('expiry_date');
+            $table->uuid('uuid')->unique();
             $table->timestamps();
         });
     }

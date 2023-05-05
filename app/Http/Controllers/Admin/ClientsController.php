@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Customer;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 
 class ClientsController extends Controller
 {
@@ -14,8 +17,11 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        return view('admin.customers.index');
+        $customers = Customer::all();
+
+        return view('Admin.customers.index', compact('customers'));
     }
+
 
 
     /**
@@ -25,7 +31,8 @@ class ClientsController extends Controller
      */
     public function create()
     {
-        //
+        return view('Admin.customers.create');
+
     }
 
     /**
@@ -36,8 +43,30 @@ class ClientsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name'=>'required|string|max:255',
+            'email' => 'nullable|email|unique:customers,email',
+            'phone' => 'required|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'gst_no' => 'nullable|string|max:50',
+            'description' => 'nullable|string',
+
+
+        ]);
+        $customer = new Customer([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'phone' => $validatedData['phone'],
+            'address' => $validatedData['address'],
+            'gst_no' => $validatedData['gst_no'],
+            'description' => $validatedData['description'],
+        ]);
+        $customer->uuid = Str::uuid();
+        $customer->save();
+
+        return redirect('admin/customers')->with('success', 'Customer created successfully.');
     }
+
 
     /**
      * Display the specified resource.
@@ -45,20 +74,19 @@ class ClientsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Customer $customer)
     {
-        //
+        return view('Admin.customers.show', compact('customer'));
     }
-
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Customer $customer)
     {
-        //
+        return view('Admin.customers.edit', compact('customer'));
     }
 
     /**
@@ -68,9 +96,30 @@ class ClientsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Customer $customer)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'nullable',
+                'email',
+                Rule::unique('customers')->ignore($customer->id),
+            ],
+            'phone' => 'required|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'gst_no' => 'nullable|string|max:50',
+            'description' => 'nullable|string',
+        ]);
+
+        $customer->name = $validatedData['name'];
+        $customer->email = $validatedData['email'];
+        $customer->phone = $validatedData['phone'];
+        $customer->address = $validatedData['address'];
+        $customer->gst_no = $validatedData['gst_no'];
+        $customer->description = $validatedData['description'];
+        $customer->save();
+        return redirect('admin/customers')->with('success', 'Customer updated successfully.');
+
     }
 
     /**
@@ -79,8 +128,10 @@ class ClientsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        return redirect('admin/customers')->with('success','customer deleted successfully.');
     }
 }
+

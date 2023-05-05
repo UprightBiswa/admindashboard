@@ -15,7 +15,7 @@ class CreateQuotationItemsTable extends Migration
     {
         Schema::create('quotation_items', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid');
+            $table->uuid('uuid')->unique();
             $table->foreignId('quotation_id')->constrained('quotations');
             $table->foreignId('service_id')->constrained('services');
             $table->string('description');
