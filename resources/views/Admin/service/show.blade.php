@@ -20,6 +20,7 @@
                             margin-bottom: 2%;">
                     <p><strong>Price:</strong> {{ $service->price }}</p>
                     <p><strong>HSN Code:</strong> {{ $service->HSN_code }}</p>
+                    <p><strong> Tax rate(%):</strong> {{ $service->tax_rate }}</p>
                     <p><strong>Description:</strong> {{ $service->description }}</p>
                     <div class="row"
                          style="padding: 2%;">

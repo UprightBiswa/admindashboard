@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 @section('content')
-    <form method="POST" action="{{ url('admin/services/'.$service->id) }}">
+    <form method="POST" action="{{ url('admin/services/' . $service->id) }}">
         @csrf
         @method('PUT')
 
@@ -24,18 +24,28 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <span class="form-label">Name</span>
-                                <input type="text" name="name" class="form-control" id="name" placeholder="Service Name *" value="{{ $service->name }}" required/>
+                                <input type="text" name="name" class="form-control" id="name"
+                                    placeholder="Service Name *" value="{{ $service->name }}" required />
                             </div>
                             <div class="form-group">
                                 <span class="form-label">Price</span>
-                                <input type="text" name="price" class="form-control" id="price" placeholder="Price *" value="{{ $service->price }}" required/>
+                                <input type="text" name="price" class="form-control" id="price"
+                                    placeholder="Price *" value="{{ $service->price }}" required />
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <span class="form-label">HSN Code</span>
-                                <input type="text" name="HSN_code" class="form-control" id="HSN_code" placeholder="HSN Code *" value="{{ $service->HSN_code }}" required/>
+                                <input type="text" name="HSN_code" class="form-control" id="HSN_code"
+                                    placeholder="HSN Code *" value="{{ $service->HSN_code }}" required />
                             </div>
+                            <div class="form-group">
+                                <span class="form-label">tax_rate</span>
+                                <input type="text" name="tax_rate" class="form-control" id="tax_rate"
+                                    placeholder="tax_rate *" value="{{ $service->tax_rate }}" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <span class="form-label">Description</span>
                                 <input type="text" name="description" class="form-control" id="description"
@@ -52,7 +62,8 @@
                     background: #0062cc;
                     color: #fff;">Update</button>
 
-                    <a href="{{ url('admin/services') }}"class="btn btn-secondary " style="  border:none;
+                    <a href="{{ url('admin/services') }}"class="btn btn-secondary "
+                        style="  border:none;
                     border-radius:1.5rem;
                     padding: 1%;
                     width: 20%;
@@ -62,5 +73,5 @@
                 </div>
             </div>
 
-        </form>
+    </form>
 @endsection

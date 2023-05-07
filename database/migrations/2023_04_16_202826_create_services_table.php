@@ -17,6 +17,7 @@ class CreateServicesTable extends Migration
             $table->id();
             $table->string('name');
             $table->double('price', 8, 2);
+            $table->decimal('tax_rate', 10, 2);
             $table->text('description')->nullable();
             $table->string('HSN_code')->nullable();
             $table->uuid('uuid')->unique();

@@ -43,12 +43,14 @@ class ServiceController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'tax_rate' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'HSN_code' => 'required|string|max:10',
         ]);
         $service = new Service([
             'name' => $validatedData['name'],
             'price' => $validatedData['price'],
+            'tax_rate' => $validatedData['tax_rate'],
             'description' => $validatedData['description'],
             'HSN_code' => $validatedData['HSN_code'],
         ]);
@@ -93,15 +95,17 @@ class ServiceController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
+            'tax_rate' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'HSN_code' => 'required|string|max:10',
         ]);
         $service->name = $validatedData['name'];
         $service->price = $validatedData['price'];
+        $service->tax_rate = $validatedData['tax_rate'];
         $service->HSN_code = $validatedData['HSN_code'];
         $service->description = $validatedData['description'];
         $service->save();
-        
+
         $service->uuid = Str::uuid();
         $service->save();
 

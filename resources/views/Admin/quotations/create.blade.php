@@ -52,8 +52,8 @@
                                 <th>Descriptions</th>
                                 <th>Service</th>
                                 <th>Quantity</th>
-                                <th>Rate</th>
-                                <th>Tax Amount</th>
+                                {{-- <th>Rate</th>
+                                <th>Tax Amount</th> --}}
                                 <th>Delete Row</th>
                             </tr>
                         </thead>
@@ -69,8 +69,8 @@
                                     </select>
                                 </td>
                                 <td><input type="text" name="quantity[]" id="quantity" class="form-control"></td>
-                                <td><input type="text" name="rate[]" id="rate" class="form-control"></td>
-                                <td><input type="text" name="tax[]" id="tax" class="form-control"></td>
+                                {{-- <td><input type="text" name="rate[]" id="rate" class="form-control"></td>
+                                <td><input type="text" name="tax[]" id="tax" class="form-control"></td> --}}
                                 <td><button class="btn btn-danger" id="btn_id" onclick="deleteRow(event)">Delete</button>
                                 </td>
                             </tr>
@@ -127,15 +127,15 @@
             quantityCell.innerHTML = '<input type="text" name="quantity[]" class="form-control">';
             newRow.appendChild(quantityCell);
 
-            // Create a rate cell
-            var rateCell = document.createElement('td');
-            rateCell.innerHTML = '<input type="text" name="rate[]" class="form-control">';
-            newRow.appendChild(rateCell);
+            // // Create a rate cell
+            // var rateCell = document.createElement('td');
+            // rateCell.innerHTML = '<input type="text" name="rate[]" class="form-control">';
+            // newRow.appendChild(rateCell);
 
-            // Create a tax cell
-            var taxCell = document.createElement('td');
-            taxCell.innerHTML = '<input type="text" name="tax[]" class="form-control">';
-            newRow.appendChild(taxCell);
+            // // Create a tax cell
+            // var taxCell = document.createElement('td');
+            // taxCell.innerHTML = '<input type="text" name="tax[]" class="form-control">';
+            // newRow.appendChild(taxCell);
 
 
 

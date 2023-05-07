@@ -45,45 +45,43 @@ class QuotationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'customer_id' => 'required',
-        'service_id.*' => 'required',
-        'quantity.*' => 'required|numeric|min:0',
-        'descriptions.*' => 'required',
-        'rate.*' => 'required|numeric|min:0',
-        'tax.*' => 'required|numeric|min:0|max:100',
-        'issue_date' => 'required|date_format:Y-m-d',
-        'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
-    ]);
+    {
+        $validatedData = $request->validate([
+            'customer_id' => 'required',
+            'service_id.*' => 'required',
+            'quantity.*' => 'required|numeric|min:0',
+            'descriptions.*' => 'required',
+            'issue_date' => 'required|date_format:Y-m-d',
+            'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
+        ]);
 
-    $quotation = new Quotation();
-    $quotation->customer_id = $validatedData['customer_id'];
-    $quotation->uuid = Str::uuid();
-    $quotation->issue_date = $validatedData['issue_date'];
-    $quotation->expiry_date = $validatedData['expiry_date'];
-    $quotation->save();
+        $quotation = new Quotation();
+        $quotation->customer_id = $validatedData['customer_id'];
+        $quotation->uuid = Str::uuid();
+        $quotation->issue_date = $validatedData['issue_date'];
+        $quotation->expiry_date = $validatedData['expiry_date'];
+        $quotation->save();
 
-    foreach ($validatedData['service_id'] as $key => $serviceId) {
-        $service = Service::findOrFail($serviceId);
+        foreach ($validatedData['service_id'] as $key => $serviceId) {
+            $service = Service::findOrFail($serviceId);
 
-        $qAmount = $validatedData['quantity'][$key] * $validatedData['rate'][$key];
-        $totaltax = $qAmount * ($validatedData['tax'][$key] / 100);
-        $totalAmount = $qAmount + $totaltax;
+            $qAmount = $validatedData['quantity'][$key] * $service->price;
+            $totaltax = $qAmount * ($service->tax_rate / 100);
+            $totalAmount = $qAmount + $totaltax;
 
-        $quotationItem = new QuotationItem();
-        $quotationItem->uuid = Str::uuid();
-        $quotationItem->quotation_id = $quotation->id;
-        $quotationItem->service_id = $serviceId;
-        $quotationItem->quantity = $validatedData['quantity'][$key];
-        $quotationItem->rate = $validatedData['rate'][$key];
-        $quotationItem->description = $validatedData['descriptions'][$key];
-        $quotationItem->tax_rate = $validatedData['tax'][$key];
-        $quotationItem->amount = $totalAmount;
-        $quotationItem->save();
+            $quotationItem = new QuotationItem();
+            $quotationItem->uuid = Str::uuid();
+            $quotationItem->quotation_id = $quotation->id;
+            $quotationItem->service_id = $serviceId;
+            $quotationItem->quantity = $validatedData['quantity'][$key];
+            $quotationItem->rate = $service->price;
+            $quotationItem->description = $validatedData['descriptions'][$key];
+            $quotationItem->tax_rate = $service->tax_rate;
+            $quotationItem->amount = $totalAmount;
+            $quotationItem->save();
+        }
+        return redirect('admin/quotations')->with('success', 'Quotation created successfully.');
     }
-    return redirect('admin/quotations')->with('success', 'Quotation created successfully.');
-}
 
 
     /**
@@ -119,48 +117,48 @@ class QuotationController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function update(Request $request, $id)
-     {
-         $validatedData = $request->validate([
-             'customer_id' => 'required',
-             'service_id.*' => 'required',
-             'quantity.*' => 'required|numeric|min:0',
-             'descriptions.*' => 'required',
-             'rate.*' => 'required|numeric|min:0',
-             'tax_rate.*' => 'required|numeric|min:0|max:100',
-             'issue_date' => 'required|date_format:Y-m-d',
-             'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
-         ]);
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'customer_id' => 'required',
+            'service_id.*' => 'required',
+            'quantity.*' => 'required|numeric|min:0',
+            'descriptions.*' => 'required',
+            // 'rate.*' => 'required|numeric|min:0',
+            // 'tax_rate.*' => 'required|numeric|min:0|max:100',
+            'issue_date' => 'required|date_format:Y-m-d',
+            'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
+        ]);
 
-         $quotation = Quotation::findOrFail($id);
-         $quotation->customer_id = $validatedData['customer_id'];
-         $quotation->issue_date = $validatedData['issue_date'];
-         $quotation->expiry_date = $validatedData['expiry_date'];
-         $quotation->save();
+        $quotation = Quotation::findOrFail($id);
+        $quotation->customer_id = $validatedData['customer_id'];
+        $quotation->issue_date = $validatedData['issue_date'];
+        $quotation->expiry_date = $validatedData['expiry_date'];
+        $quotation->save();
 
-         // Delete existing quotation items
-         $quotation->quotationItems()->delete();
+        // Delete existing quotation items
+        $quotation->quotationItems()->delete();
 
-         foreach ($validatedData['service_id'] as $key => $serviceId) {
-             $service = Service::findOrFail($serviceId);
+        foreach ($validatedData['service_id'] as $key => $serviceId) {
+            $service = Service::findOrFail($serviceId);
 
-             $qAmount = $validatedData['quantity'][$key] * $validatedData['rate'][$key];
-             $totaltax = $qAmount * ($validatedData['tax_rate'][$key] / 100);
-             $totalAmount = $qAmount + $totaltax;
+            $qAmount = $validatedData['quantity'][$key] * $service->price;
+            $totaltax = $qAmount * ($service->tax_rate / 100);
+            $totalAmount = $qAmount + $totaltax;
 
-             $quotationItem = new QuotationItem();
-             $quotationItem->uuid = Str::uuid();
-             $quotationItem->quotation_id = $quotation->id;
-             $quotationItem->service_id = $serviceId;
-             $quotationItem->quantity = $validatedData['quantity'][$key];
-             $quotationItem->rate = $validatedData['rate'][$key];
-             $quotationItem->description = $validatedData['descriptions'][$key];
-             $quotationItem->tax_rate = $validatedData['tax_rate'][$key];
-             $quotationItem->amount = $totalAmount;
-             $quotationItem->save();
-         }
-         return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
-     }
+            $quotationItem = new QuotationItem();
+            $quotationItem->uuid = Str::uuid();
+            $quotationItem->quotation_id = $quotation->id;
+            $quotationItem->service_id = $serviceId;
+            $quotationItem->quantity = $validatedData['quantity'][$key];
+            $quotationItem->rate = $service->price;
+            $quotationItem->description = $validatedData['descriptions'][$key];
+            $quotationItem->tax_rate = $service->tax_rate;
+            $quotationItem->amount = $totalAmount;
+            $quotationItem->save();
+        }
+        return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
+    }
 
 
     /**

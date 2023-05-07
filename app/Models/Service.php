@@ -13,7 +13,7 @@ class Service extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'price', 'description', 'HSN_code'
+        'name', 'price', 'tax_rate','description', 'HSN_code'
     ];
     protected static function boot()
     {

@@ -2,15 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Invoice extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'customer_id', 'payment_id', 'payment_status', 'uuid'
+        'customer_id', 'payment_id', 'payment_status', 'total_amount', 'issue_date', 'expiry_date'
     ];
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($invoice) {
+            $invoice->uuid = Str::uuid();
+        });
+    }
 
     public function customer()
     {

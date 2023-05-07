@@ -11,7 +11,7 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'payment_date', 'sub_total', 'transaction_id', 'total_amount', 'gst', 'payment_method', 
+        'payment_date', 'sub_total', 'transaction_id', 'total_amount', 'gst', 'payment_method'
     ];
     protected static function boot()
     {

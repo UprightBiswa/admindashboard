@@ -136,8 +136,8 @@
                         <th>Descriptions</th>
                         <th>Service</th>
                         <th>Quantity</th>
-                        <th>Rate</th>
-                        <th>Tax Amount</th>
+                        {{-- <th>Rate</th>
+                        <th>Tax Amount</th> --}}
                         <th>Delete Row</th>
                     </tr>
                 </thead>
@@ -157,10 +157,10 @@
                             </td>
                             <td><input type="text" name="quantity[]" id="quantity" class="form-control"
                                     value="{{ $quotationitem->quantity }}"></td>
-                            <td><input type="text" name="rate[]" id="rate" class="form-control"
+                            {{-- <td><input type="text" name="rate[]" id="rate" class="form-control"
                                     value="{{ $quotationitem->rate }}"></td>
                             <td><input type="text" name="tax_rate[]" id="tax_rate" class="form-control"
-                                    value="{{ $quotationitem->tax_rate }}"></td>
+                                    value="{{ $quotationitem->tax_rate }}"></td> --}}
                             <td><button type="button" class="btn btn-danger"
                                     onclick="deleteQuotationItem(this)">Delete</button></td>
                         </tr>
@@ -212,23 +212,23 @@
     quantityInput.className = 'form-control';
     cell4.appendChild(quantityInput);
 
-    var cell5 = row.insertCell(4);
-    var rateInput = document.createElement('input');
-    rateInput.type = 'text';
-    rateInput.name = 'rate[]';
-    rateInput.id = 'rate';
-    rateInput.className = 'form-control';
-    cell5.appendChild(rateInput);
+    // var cell5 = row.insertCell(4);
+    // var rateInput = document.createElement('input');
+    // rateInput.type = 'text';
+    // rateInput.name = 'rate[]';
+    // rateInput.id = 'rate';
+    // rateInput.className = 'form-control';
+    // cell5.appendChild(rateInput);
 
-    var cell6 = row.insertCell(5);
-    var taxInput = document.createElement('input');
-    taxInput.type = 'text';
-    taxInput.name = 'tax_rate[]';
-    taxInput.id = 'tax_rate';
-    taxInput.className = 'form-control';
-    cell6.appendChild(taxInput);
+    // var cell6 = row.insertCell(5);
+    // var taxInput = document.createElement('input');
+    // taxInput.type = 'text';
+    // taxInput.name = 'tax_rate[]';
+    // taxInput.id = 'tax_rate';
+    // taxInput.className = 'form-control';
+    // cell6.appendChild(taxInput);
 
-    var cell7 = row.insertCell(6);
+    var cell7 = row.insertCell(4);
     var deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.className = 'btn btn-danger';
