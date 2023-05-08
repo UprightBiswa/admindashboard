@@ -62,12 +62,15 @@ class QuotationController extends Controller
         $quotation->expiry_date = $validatedData['expiry_date'];
         $quotation->save();
 
+        $totalAmount   = 0;
+
         foreach ($validatedData['service_id'] as $key => $serviceId) {
             $service = Service::findOrFail($serviceId);
 
             $qAmount = $validatedData['quantity'][$key] * $service->price;
             $totaltax = $qAmount * ($service->tax_rate / 100);
-            $totalAmount = $qAmount + $totaltax;
+            $totalAmountItem  = $qAmount + $totaltax;
+            $totalAmount  += $totalAmountItem;
 
             $quotationItem = new QuotationItem();
             $quotationItem->uuid = Str::uuid();
@@ -77,9 +80,12 @@ class QuotationController extends Controller
             $quotationItem->rate = $service->price;
             $quotationItem->description = $validatedData['descriptions'][$key];
             $quotationItem->tax_rate = $service->tax_rate;
-            $quotationItem->amount = $totalAmount;
+            $quotationItem->amount = $totalAmountItem;
             $quotationItem->save();
         }
+        $quotation->total_amount = $totalAmount;
+        $quotation->save();
+
         return redirect('admin/quotations')->with('success', 'Quotation created successfully.');
     }
 
@@ -124,8 +130,6 @@ class QuotationController extends Controller
             'service_id.*' => 'required',
             'quantity.*' => 'required|numeric|min:0',
             'descriptions.*' => 'required',
-            // 'rate.*' => 'required|numeric|min:0',
-            // 'tax_rate.*' => 'required|numeric|min:0|max:100',
             'issue_date' => 'required|date_format:Y-m-d',
             'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
         ]);
@@ -139,12 +143,15 @@ class QuotationController extends Controller
         // Delete existing quotation items
         $quotation->quotationItems()->delete();
 
+        $subtotal = 0;
+
         foreach ($validatedData['service_id'] as $key => $serviceId) {
             $service = Service::findOrFail($serviceId);
 
             $qAmount = $validatedData['quantity'][$key] * $service->price;
             $totaltax = $qAmount * ($service->tax_rate / 100);
             $totalAmount = $qAmount + $totaltax;
+            $subtotal += $totalAmount;
 
             $quotationItem = new QuotationItem();
             $quotationItem->uuid = Str::uuid();
@@ -157,6 +164,9 @@ class QuotationController extends Controller
             $quotationItem->amount = $totalAmount;
             $quotationItem->save();
         }
+        $quotation->total_amount = $subtotal;
+        $quotation->save();
+        
         return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
     }
 

@@ -11,7 +11,7 @@ class Quotation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id', 'issue_date', 'expiry_date'
+        'customer_id', 'total_amount','issue_date', 'expiry_date'
     ];
     protected static function boot()
     {

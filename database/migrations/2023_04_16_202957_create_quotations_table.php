@@ -18,6 +18,7 @@ class CreateQuotationsTable extends Migration
             $table->foreignId('customer_id')->constrained('customers');
             $table->date('issue_date');
             $table->date('expiry_date');
+            $table->decimal('total_amount', 10, 2)->nullable();
             $table->uuid('uuid')->unique();
             $table->timestamps();
         });

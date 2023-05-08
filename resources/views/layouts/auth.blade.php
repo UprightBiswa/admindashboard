@@ -91,7 +91,7 @@
                         </li>
 
                         <li>
-                            <a class="sidenav-item-link" href="{{ url('admin/invoice') }}">
+                            <a class="sidenav-item-link" href="{{ url('admin/invoices') }}">
                                 <i class="mdi mdi-chart-line"></i>
                                 <span class="text-dark">invoice</span>
                             </a>

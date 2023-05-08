@@ -19,6 +19,8 @@ class CreateInvoiceItemsTable extends Migration
             $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
             $table->integer('quantity');
             $table->double('discount')->default(0);
+            $table->decimal('rate', 10, 2);
+            $table->decimal('tax_rate', 10, 2);
             $table->decimal('amount', 10, 2);
             $table->string('description');
             $table->uuid('uuid')->unique();

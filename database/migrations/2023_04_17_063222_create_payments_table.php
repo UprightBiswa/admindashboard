@@ -15,6 +15,7 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->dateTime('payment_date');
             $table->double('sub_total', 10, 2);
             $table->string('transaction_id');
@@ -24,6 +25,7 @@ class CreatePaymentsTable extends Migration
             $table->uuid('uuid');
             $table->timestamps();
         });
+
     }
 
     /**

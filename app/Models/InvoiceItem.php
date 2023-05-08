@@ -11,14 +11,14 @@ class InvoiceItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'invoice_id', 'service_id', 'quantity', 'discount', 'amount', 'description',
+        'invoice_id', 'service_id', 'quantity', 'discount','tax_rate','rate', 'amount', 'description',
     ];
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($invoiceitem ) {
-            $invoiceitem->uuid = Str::uuid();
+        static::creating(function ($invoiceItem ) {
+            $invoiceItem->uuid = Str::uuid();
         });
     }
     public function invoice()

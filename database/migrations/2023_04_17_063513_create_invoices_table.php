@@ -16,11 +16,10 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers');
-            $table->foreignId('payment_id')->constrained('payments');
             $table->date('issue_date');
             $table->date('expiry_date');
             $table->boolean('payment_status')->default(false);
-            $table->decimal('total_amount', 10, 2);
+            $table->decimal('total_amount', 10, 2)->default(0.00);
             $table->string('uuid')->unique();
             $table->timestamps();
         });
