@@ -61,11 +61,14 @@
                                                             data-target="#paymentModal{{ $invoice->id }}">
                                                             Payment
                                                         </button>
+                                                        <a href="{{ url('admin/invoices', $invoice) }}"
+                                                            class="btn btn-sm btn-info">View</a>
+                                                        <a href="{{ url('admin/invoices/' . $invoice->id . '/edit') }}"
+                                                            class="btn btn-sm btn-primary">Edit</a>
+                                                    @else
+                                                        <a href="{{ url('admin/invoices', $invoice) }}"
+                                                            class="btn btn-sm btn-info">View</a>
                                                     @endif
-                                                    <a href="{{ url('admin/invoices', $invoice) }}"
-                                                        class="btn btn-sm btn-info">View</a>
-                                                    <a href="{{ url('admin/invoices/' . $invoice->id . '/edit') }}"
-                                                        class="btn btn-sm btn-primary">Edit</a>
                                                     <form action="{{ url('admin/invoices', $invoice) }}" method="POST"
                                                         style="display:inline">
                                                         @csrf
@@ -73,8 +76,8 @@
                                                         <button type="submit" class="btn btn-sm btn-danger"
                                                             onclick="return confirm('Are you sure you want to delete this invoice?')">Delete</button>
                                                     </form>
-
                                                 </td>
+
                                             </tr>
                                             <div class="modal fade" id="paymentModal{{ $invoice->id }}" tabindex="-1"
                                                 role="dialog" aria-labelledby="paymentModal{{ $invoice->id }}Label"
@@ -91,55 +94,82 @@
                                                             </button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <form action="{{ url('admin/invoices/' . $invoice->id . '/payment') }}" method="POST" id="paymentForm">
+                                                            <form
+                                                                action="{{ url('admin/invoices/' . $invoice->id . '/payment') }}"
+                                                                method="POST" id="paymentForm">
                                                                 @csrf
                                                                 <div class="form-group">
                                                                     <label for="payment_method">Payment Method</label>
-                                                                    <select class="form-control" id="payment_method" name="payment_method" required>
-                                                                        <option value="">Select Payment Method</option>
+                                                                    <select class="form-control" id="payment_method"
+                                                                        name="payment_method" required>
+                                                                        <option value="">Select Payment Method
+                                                                        </option>
                                                                         <option value="online_upi">Online UPI</option>
                                                                         <option value="offline_cash">Offline Cash</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="payment-details">
                                                                     <div class="form-group row">
-                                                                        <label for="payment_date" class="col-sm-4 col-form-label">Payment Date</label>
+                                                                        <label for="payment_date"
+                                                                            class="col-sm-4 col-form-label">Payment
+                                                                            Date</label>
                                                                         <div class="col-sm-8">
-                                                                            <input type="datetime-local" class="form-control" id="payment_date" name="payment_date" required>
+                                                                            <input type="datetime-local"
+                                                                                class="form-control" id="payment_date"
+                                                                                name="payment_date" required>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row">
-                                                                        <label for="transaction_id" class="col-sm-4 col-form-label">Transaction ID</label>
+                                                                        <label for="transaction_id"
+                                                                            class="col-sm-4 col-form-label">Transaction
+                                                                            ID</label>
                                                                         <div class="col-sm-8">
-                                                                            <input type="text" class="form-control" id="transaction_id" name="transaction_id" required>
+                                                                            <input type="text" class="form-control"
+                                                                                id="transaction_id" name="transaction_id"
+                                                                                required>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row">
-                                                                        <label for="gst" class="col-sm-4 col-form-label">GST (%)</label>
+                                                                        <label for="gst"
+                                                                            class="col-sm-4 col-form-label">GST (%)</label>
                                                                         <div class="col-sm-8">
-                                                                            <input type="number" step="0.01" min="0" max="100" class="form-control" id="gst" name="gst" value="{{ $totalTaxRate }}" required>
+                                                                            <input type="number" step="0.01"
+                                                                                min="0" max="100"
+                                                                                class="form-control" id="gst"
+                                                                                name="gst" value="{{ $totalTaxRate }}"
+                                                                                required>
 
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group row">
-                                                                        <label for="subtotal" class="col-sm-4 col-form-label">Sub Total</label>
+                                                                        <label for="sub_total"
+                                                                            class="col-sm-4 col-form-label">Sub
+                                                                            Total</label>
                                                                         <div class="col-sm-8">
-                                                                            <input type="number" step="0.01" min="0" class="form-control" id="subtotal" name="subtotal"   value="{{ $invoice->total_amount }}" readonly>
+                                                                            <input type="number" step="0.01"
+                                                                                min="0" class="form-control"
+                                                                                id="sub_total" name="sub_total"
+                                                                                value="{{ $invoice->total_amount }}"
+                                                                                readonly>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="total_amount">Payment Amount</label>
-                                                                    <input type="number" class="form-control" id="total_amount" name="total_amount" placeholder="Enter payment amount"   value="{{ $invoice->total_amount }}" required>
+                                                                    <input type="number" class="form-control"
+                                                                        id="total_amount" name="total_amount"
+                                                                        placeholder="Enter payment amount"
+                                                                        value="{{ $invoice->total_amount }}" required>
                                                                 </div>
-                                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Submit</button>
                                                             </form>
 
 
 
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>

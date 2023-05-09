@@ -168,6 +168,10 @@ class InvoiceController extends Controller
         ]);
 
         $invoice = Invoice::findOrFail($id);
+        if ($invoice->payment_status == 1) {
+            return redirect('admin/invoices')->with('error', 'Cannot update a paid invoice.');
+        }
+
         $invoice->customer_id = $validatedData['customer_id'];
         $invoice->payment_status =  $validatedData['payment_status'];
         $invoice->issue_date = $validatedData['issue_date'];
@@ -233,41 +237,7 @@ class InvoiceController extends Controller
 
         return view('Admin.invoices.pdf', compact('invoice', 'customers', 'services', 'payments'));
     }
-    //     public function submitPayment(Request $request, $invoiceId)
-    //     {
-    //         // validate the form data
-    //         $validatedData = $request->validate([
-    //             'payment_method' => 'required|string|in:online_upi,offline_cash',
-    //             'payment_date' => 'required|date',
-    //             'sub_total' => 'required|numeric|min:0',
-    //             'transaction_id' => 'required|string|max:255',
-    //             'total_amount' => 'required|numeric|min:0',
-    //             'gst' => 'required|numeric|min:0',
-    //         ]);
 
-    //         // get the invoice
-    //         $invoice = Invoice::findOrFail($invoiceId);
-
-    //         // check if the invoice is already paid
-    //         if ($invoice->status === 'paid') {
-    //             return redirect()->back()->with('error', 'Invoice is already paid.');
-    //         }
-
-    //         // update the payment details
-    //         $invoice->payment_method = $validatedData['payment_method'];
-    //         $invoice->payment_date = $validatedData['payment_date'];
-    //         $invoice->sub_total = $validatedData['sub_total'];
-    //         $invoice->transaction_id = $validatedData['transaction_id'];
-    //         $invoice->total_amount = $validatedData['total_amount'];
-    //         $invoice->gst = $validatedData['gst'];
-    //         $invoice->status = 'paid';
-
-    //         // save the changes
-    //         $invoice->save();
-
-    //         return redirect()->back()->with('success', 'Payment submitted successfully.');
-    //     }
-    // }
     public function submitPayment(Request $request, Invoice $invoice)
     {
         $customer = $invoice->customer;
@@ -276,13 +246,13 @@ class InvoiceController extends Controller
         $payment->customer_id = $invoice->id;
         $payment->payment_date = $request->payment_date;
         $payment->sub_total = $request->sub_total;
-        $payment->transaction_id = $request->_id;
+        $payment->transaction_id = $request->transaction_id;
         $payment->total_amount = $request->total_amount;
         $payment->gst = $request->gst;
         $payment->payment_method = $request->payment_method;
         $customer->payments()->save($payment);
 
-        $invoice->payment_status = 'paid';
+        $invoice->payment_status = '1';
         $invoice->save();
 
         return redirect('admin/invoices')

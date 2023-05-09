@@ -28,13 +28,19 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label for="payment_status">Payment status</label>
-                        <select id="payment_status" name="payment_status" class="form-control">
-                            @foreach($paymentOptions as $key => $value)
-                                <option value="{{ $key }}" {{ $key == $invoice->payment_status ? 'selected' : '' }}>{{ $value }}</option>
-                            @endforeach
-                        </select>
+                        @if($invoice->payment_status != 1)
+                            <select id="payment_status" name="payment_status" class="form-control">
+                                @foreach($paymentOptions as $key => $value)
+                                    <option value="{{ $key }}" {{ $key == $invoice->payment_status ? 'selected' : '' }}>{{ $value }}</option>
+                                @endforeach
+                            </select>
+                        @else
+                            <input type="hidden" name="payment_status" value="1">
+                            <p>Successful</p>
+                        @endif
                     </div>
                 </div>
+
 
                 <div class="col-md-3">
                     <div class="form-group">
