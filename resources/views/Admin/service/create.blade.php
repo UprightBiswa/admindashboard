@@ -1,81 +1,85 @@
 @extends('layouts.auth')
+
 @section('content')
-    <form method="POST" action="{{ url('admin/services') }}">
-        @csrf
-
-
-        <div class="container register-form">
-            <div class="form">
-                <div class="note"
-                    style=" text-align: center;
-                height: 80px;
-                background: -webkit-linear-gradient(left, #a200ff, #c51111);
-                color: #fff;
-                font-weight: bold;
-                line-height: 80px;">
-                    <p>Add all service details.</p>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Add Service
+                        <a href="{{ url('admin/services') }}" class="btn btn-danger btn-sm text-white float-end">BACK</a>
+                    </h3>
                 </div>
-
-                <div class="form-content"
-                    style=" padding: 5%;
-                border: 1px solid #ced4da;
-                margin-bottom: 2%;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <span class="form-label">Name</span>
-                                <input type="text" name="name" class="form-control" id="name"
-                                    placeholder="Service Name *" value="" required />
+                <div class="card-body">
+                    <form action="{{ url('admin/services') }}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name">Name:</label>
+                                <input type="text" name="name" id="name" class="form-control"
+                                    placeholder="Service Name *" value="{{ old('name') }}"  />
+                                @if (old('name') && old('name') === old('name'))
+                                    <small class="text-danger">The service name "{{ old('name') }}" is already taken.
+                                        Please
+                                        choose a different name.</small>
+                                @else
+                                    @error('name')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                @endif
                             </div>
-                            <div class="form-group">
-                                <span class="form-label">Price</span>
-                                <input type="text" name="price" class="form-control" id="price"
-                                    placeholder="Price *" value="" required />
+
+                            <div class="col-md-6 mb-3">
+                                <label for="price">Price:</label>
+                                <input type="text" name="price" id="price" class="form-control"
+                                    placeholder="Price *" value="{{ old('price') }}"  />
+
+                                @error('price')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="HSN_code">HSN_code:</label>
+                                <input type="text" name="HSN_code" id="HSN_code" class="form-control"
+                                    placeholder="HSN Code *" value="{{ old('HSN_code') }}"  />
+                                @if (old('HSN_code') && old('HSN_code') === old('HSN_code'))
+                                    <small class="text-danger">The HSN_code number "{{ old('HSN_code') }}" is already
+                                        registered.
+                                        Please enter a different HSN_code number.</small>
+                                @else
+                                    @error('HSN_code')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                @endif
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="tax_rate">tax_rate:</label>
+                                <input type="text" name="tax_rate" id="tax_rate" class="form-control"
+                                    placeholder="tax_rate *" value="{{ old('tax_rate') }}"  />
+
+                                @error('tax_rate')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+
+                            </div>
+
+                            <div class="col-md-12 mb-3">
+                                <label for="description">Description:</label>
+                                <textarea name="description" id="description" class="form-control" placeholder="Description *">{{ old('description') }}</textarea>
+                                @error('description')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a href="{{ url('admin/services') }}" class="btn btn-secondary">Cancel</a>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <span class="form-label">HSN Code</span>
-                                <input type="text" name="HSN_code" class="form-control" id="HSN_code"
-                                    placeholder="HSN Code *" value="" required />
-
-                            </div>
-                            <div class="form-group">
-                                <span class="form-label">tax_rate </span>
-                                <input type="text" name="tax_rate" class="form-control" id="tax_rate"
-                                    placeholder="tax_rate *" value="" required />
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <span class="form-label">Description</span>
-                                <input type="text" name="description" class="form-control" id="description"
-                                    placeholder="Description *" value="" />
-
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btnSubmit"
-                        style="  border:none;
-                    border-radius:1.5rem;
-                    padding: 1%;
-                    width: 20%;
-                    cursor: pointer;
-                    background: #0062cc;
-                    color: #fff;">Submit</button>
-
-
-                    <a href="{{ url('admin/services') }}"class="btn btn-secondary "
-                        style="  border:none;
-                    border-radius:1.5rem;
-                    padding: 1%;
-                    width: 20%;
-                    cursor: pointer;
-                    background: #cc0000;
-                    color: #fff;">Back</a>
+                    </form>
                 </div>
             </div>
         </div>
-
-    </form>
+    </div>
 @endsection

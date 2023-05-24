@@ -29,7 +29,9 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
+   //dashboard route
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/search', [DashboardController::class, 'search']);
 
 
     //customer route
@@ -67,7 +69,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::get('/quotations/pdf/{quotation}', 'pdf');
     });
 
-    //invoice route
+     //invoice route
     Route::controller(InvoiceController::class)->group(function () {
         Route::get('/invoices', 'index');
         Route::get('/invoices/create', 'create');
@@ -77,8 +79,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::put('/invoices/{invoice}', 'update');
         Route::delete('/invoices/{invoice}', 'destroy');
         Route::get('/invoices/pdf/{invoice}', 'pdf');
-
-        // Route::get('invoices/{invoice}', 'create');
-        Route::post('invoices/{invoice}/payment', 'submitPayment');
+        Route::get('/invoices/{invoice}/payment', 'paymentDetails');
+        Route::post('/invoices/{invoice}/payment', 'submitPayment');
     });
 });

@@ -10,7 +10,8 @@ class Invoice extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'customer_id', 'payment_status', 'total_amount', 'issue_date', 'expiry_date'
+        'customer_id', 'payment_status', 'total_amount',
+        'issue_date', 'expiry_date'
     ];
     protected static function boot()
     {
@@ -31,5 +32,5 @@ class Invoice extends Model
         return $this->hasMany(InvoiceItem::class);
     }
 
-    
+
 }

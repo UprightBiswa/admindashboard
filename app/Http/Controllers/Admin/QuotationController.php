@@ -20,8 +20,8 @@ class QuotationController extends Controller
      */
     public function index()
     {
-        $quotations = Quotation::all();
-        $quotationItems = QuotationItem::all();
+        $quotations = Quotation::paginate(1);
+        $quotationItems = QuotationItem::paginate(1);
 
         return view('Admin.quotations.index', compact('quotations', 'quotationItems'));
     }
@@ -166,7 +166,7 @@ class QuotationController extends Controller
         }
         $quotation->total_amount = $subtotal;
         $quotation->save();
-        
+
         return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
     }
 

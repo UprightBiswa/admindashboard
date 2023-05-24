@@ -1,70 +1,83 @@
 @extends('layouts.auth')
 
 @section('content')
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h3>Service Details
+                    <a href="{{ url('admin/services') }}" class="btn btn-sm btn-primary float-end">BACK</a>
+                </h3>
+            </div>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header"
-                     style="text-align: center;
-                            height: 80px;
-                            background: -webkit-linear-gradient(left, #a200ff, #c51111);
-                            color: #fff;
-                            font-weight: bold;
-                            line-height: 80px;">
-                    <h1>{{ $service->name }}</h1>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Name:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {{ $service->name }}
+                    </div>
                 </div>
-                <div class="card-body"
-                     style="border: 1px solid #ced4da;
-                            margin-bottom: 2%;">
-                    <p><strong>Price:</strong> {{ $service->price }}</p>
-                    <p><strong>HSN Code:</strong> {{ $service->HSN_code }}</p>
-                    <p><strong> Tax rate(%):</strong> {{ $service->tax_rate }}</p>
-                    <p><strong>Description:</strong> {{ $service->description }}</p>
-                    <div class="row"
-                         style="padding: 2%;">
-                        <div class="col-md-4">
-                            <a href="{{ url('admin/services') }}"
-                               class="btn btn-secondary"
-                               style="border:none;
-                                      border-radius:1.5rem;
-                                      padding: 1%;
-                                      width: 100%;
-                                      cursor: pointer;
-                                      background: #0062cc;
-                                      color: #fff;">Back</a>
-                        </div>
-                        <div class="col-md-4">
-                            <a href="{{ url('admin/services/'.$service->id.'/edit') }}"
-                               class="btn btn-warning"
-                               style="border:none;
-                                      border-radius:1.5rem;
-                                      padding: 1%;
-                                      width: 100%;
-                                      cursor: pointer;
-                                      background: #ffc107;
-                                      color: #fff;">Edit</a>
-                        </div>
-                        <div class="col-md-4">
-                            <form action="{{ url('admin/services/'.$service->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        class="btn btn-danger"
-                                        style="border:none;
-                                               border-radius:1.5rem;
-                                               padding: 1%;
-                                               width: 100%;
-                                               cursor: pointer;
-                                               background: #dc3545;
-                                               color: #fff;">Delete</button>
-                            </form>
-                        </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Price:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {{ $service->price }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>HSN Code:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {{ $service->HSN_code }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Tax rate(%):</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {{ $service->tax_rate }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Description:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {{ $service->description }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Created At:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {{ $service->created_at }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Updated At:</strong>
+                    </div>
+                    <div class="col-md-8">
+                        {{ $service->updated_at }}
                     </div>
                 </div>
             </div>
+
+            <div class="card-footer">
+                <a href="{{ url('admin/services/' . $service->id . '/edit') }}" class="btn btn-sm btn-success">Edit</a>
+                <form action="{{ url('admin/services/' . $service->id) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-danger"
+                        onclick="return confirm('Are you sure you want to delete this customer?')">Delete</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 @endsection

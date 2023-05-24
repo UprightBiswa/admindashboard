@@ -32,8 +32,8 @@ class InvoiceController extends Controller
             }
         }
 
-        $invoices  = Invoice::all();
-        $invoiceItem = InvoiceItem::all();
+        $invoices  = Invoice::paginate(3);
+        $invoiceItem = InvoiceItem::paginate(3);
 
         return view('Admin.invoices.index', compact('invoices', 'invoiceItem', 'totalTaxRate'));
     }
@@ -224,7 +224,7 @@ class InvoiceController extends Controller
         $invoice->invoiceItems()->delete();
         $invoice->delete();
 
-        return redirect('admin/invoice')
+        return redirect('admin/invoices')
             ->with('success', 'Invoice deleted successfully.');
     }
 
@@ -236,6 +236,11 @@ class InvoiceController extends Controller
         $payments = Payment::all();
 
         return view('Admin.invoices.pdf', compact('invoice', 'customers', 'services', 'payments'));
+    }
+
+    public function paymentDetails(Invoice $invoice)
+    {
+        return view('admin.payment.details', compact('invoice'));
     }
 
     public function submitPayment(Request $request, Invoice $invoice)

@@ -1,106 +1,112 @@
 @extends('layouts.auth')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-9">
-                <h1>Edit Invoice</h1>
-            </div>
-            <div class="col-sm-2"><a href="{{ url('admin/invoices') }}" class="btn btn-sm btn-primary mb-3 ">BACK</a></div>
-        </div>
-
-        <form action="{{ url('admin/invoices/' . $invoice->id) }}" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="customer_id">Customer</label>
-                        <select name="customer_id" id="customer_id" class="form-control">
-                            @foreach ($customers as $customer)
-                                <option value="{{ $customer->id }}" @if ($customer->id == $invoice->customer_id) selected @endif>
-                                    {{ $customer->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="payment_status">Payment status</label>
-                        @if($invoice->payment_status != 1)
-                            <select id="payment_status" name="payment_status" class="form-control">
-                                @foreach($paymentOptions as $key => $value)
-                                    <option value="{{ $key }}" {{ $key == $invoice->payment_status ? 'selected' : '' }}>{{ $value }}</option>
-                                @endforeach
-                            </select>
-                        @else
-                            <input type="hidden" name="payment_status" value="1">
-                            <p>Successful</p>
-                        @endif
-                    </div>
-                </div>
-
-
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="issue_date">issue_date</label>
-                        <input type="date" name="issue_date" id="issue_date" class="form-control"
-                            value="{{ $invoice->issue_date }}">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="expiry_date">expiry_date</label>
-                        <input type="date" name="expiry_date" id="expiry_date" class="form-control"
-                            value="{{ $invoice->expiry_date }}">
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Edit Invoice
+                        <a href="{{ url('admin/invoices') }}" class="btn btn-danger btn-sm text-white float-end">BACK</a>
+                    </h3>
                 </div>
             </div>
-            <hr>
-            <h3>Quotation Items</h3>
-            <table class="table table-striped table-bordered">
-                <thead style="background-color:#84B0CA;" class="text-white">
-                    <tr>
-                        <th>#</th>
-                        <th>Descriptions</th>
-                        <th>Service</th>
-                        <th>Quantity</th>
-                        <th>Discount</th>
-                        {{-- <th>Tax Amount</th> --}}
-                        <th>Delete Row</th>
-                    </tr>
-                </thead>
-                <tbody id="invoice-items">
-                    @foreach ($invoice->invoiceitems as $index => $invoiceitem)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td><input type="text" name="descriptions[]" id="descriptions" class="form-control"
-                                    value="{{ $invoiceitem->description }}"></td>
-                            <td>
-                                <select name="service_id[]" id="service_id" class="form-control">
-                                    @foreach ($services as $service)
-                                        <option value="{{ $service->id }}"
-                                            @if ($service->id == $invoiceitem->service_id) selected @endif>{{ $service->name }}</option>
+
+            <div class="card-body">
+                <form action="{{ url('admin/invoices/' . $invoice->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="customer_id">Customer</label>
+                                <select name="customer_id" id="customer_id" class="form-control">
+                                    @foreach ($customers as $customer)
+                                        <option value="{{ $customer->id }}"
+                                            @if ($customer->id == $invoice->customer_id) selected @endif>
+                                            {{ $customer->name }}</option>
                                     @endforeach
                                 </select>
-                            </td>
-                            <td><input type="text" name="quantity[]" id="quantity" class="form-control"
-                                    value="{{ $invoiceitem->quantity }}"></td>
-                            <td><input type="text" name="discount[]" id="discount" class="form-control"
-                                    value="{{ $invoiceitem->discount }}"></td>
-                            {{-- <td><input type="text" name="tax_rate[]" id="tax_rate" class="form-control"
-                                    value="{{ $invoiceitem->tax_rate }}"></td> --}}
-                            <td><button type="button" class="btn btn-danger"
-                                    onclick="deleteQuotationItem(this)">Delete</button></td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <button type="button" class="btn btn-success" onclick="addQuotationItem()">Add Item</button>
-            <hr>
-            <button type="submit" class="btn btn-primary">Update invoice</button>
-        </form>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="payment_status">Payment status</label>
+                                @if ($invoice->payment_status != 1)
+                                    <select id="payment_status" name="payment_status" class="form-control">
+                                        @foreach ($paymentOptions as $key => $value)
+                                            <option value="{{ $key }}"
+                                                {{ $key == $invoice->payment_status ? 'selected' : '' }}>{{ $value }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                @else
+                                    <input type="hidden" name="payment_status" value="1">
+                                    <p>Successful</p>
+                                @endif
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="issue_date">issue_date</label>
+                                <input type="date" name="issue_date" id="issue_date" class="form-control"
+                                    value="{{ $invoice->issue_date }}">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="expiry_date">expiry_date</label>
+                                <input type="date" name="expiry_date" id="expiry_date" class="form-control"
+                                    value="{{ $invoice->expiry_date }}">
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h3>Quotation Items</h3>
+                    <table class="table table-striped table-bordered">
+                        <thead style="background-color:#84B0CA;" class="text-white">
+                            <tr>
+                                <th>#</th>
+                                <th>Descriptions</th>
+                                <th>Service</th>
+                                <th>Quantity</th>
+                                <th>Discount</th>
+                                <th>Delete Row</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoice-items">
+                            @foreach ($invoice->invoiceitems as $index => $invoiceitem)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td><input type="text" name="descriptions[]" id="descriptions" class="form-control"
+                                            value="{{ $invoiceitem->description }}"></td>
+                                    <td>
+                                        <select name="service_id[]" id="service_id" class="form-control">
+                                            @foreach ($services as $service)
+                                                <option value="{{ $service->id }}"
+                                                    @if ($service->id == $invoiceitem->service_id) selected @endif>{{ $service->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td><input type="text" name="quantity[]" id="quantity" class="form-control"
+                                            value="{{ $invoiceitem->quantity }}"></td>
+                                    <td><input type="text" name="discount[]" id="discount" class="form-control"
+                                            value="{{ $invoiceitem->discount }}"></td>
+                                    <td><button type="button" class="btn btn-danger"
+                                            onclick="deleteQuotationItem(this)">Delete</button></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success" onclick="addQuotationItem()">Add Item</button>
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Update invoice</button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <script>

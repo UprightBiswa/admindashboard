@@ -16,7 +16,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::all();
+        $services = Service::paginate(1);
         return view('Admin.service.index', compact('services'));
     }
 
@@ -56,7 +56,7 @@ class ServiceController extends Controller
         ]);
         $service->uuid = Str::uuid();
         $service->save();
-        return redirect('admin/services')->with('success', 'Service created successfully.');
+        return redirect('admin/services')->with('message', 'Service created successfully.');
 
 
     }
@@ -109,7 +109,7 @@ class ServiceController extends Controller
         $service->uuid = Str::uuid();
         $service->save();
 
-        return redirect('admin/services')->with('success', 'Service updated successfully.');
+        return redirect('admin/services')->with('message', 'Service updated successfully.');
     }
 
     /**
@@ -120,8 +120,11 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
+        if ($service->invoiceItems()->count() > 0 || $service->quotationItems()->count() > 0) {
+            return redirect('admin/services')->with('message', 'Cannot delete this service. There are associated invoices or quotations.');
+        }
         $service->delete();
-        return redirect('admin/services')->with('success', 'service delered successfully.');
+        return redirect('admin/services')->with('message', 'service delered successfully.');
     }
 }
 

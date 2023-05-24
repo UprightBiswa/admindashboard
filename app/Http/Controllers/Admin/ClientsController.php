@@ -17,7 +17,7 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
+        $customers = Customer::paginate(2);
 
         return view('Admin.customers.index', compact('customers'));
     }
@@ -32,7 +32,6 @@ class ClientsController extends Controller
     public function create()
     {
         return view('Admin.customers.create');
-
     }
 
     /**
@@ -44,7 +43,7 @@ class ClientsController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name'=>'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'nullable|email|unique:customers,email',
             'phone' => 'required|string|max:20',
             'address' => 'nullable|string|max:255',
@@ -64,7 +63,13 @@ class ClientsController extends Controller
         $customer->uuid = Str::uuid();
         $customer->save();
 
-        return redirect('admin/customers')->with('success', 'Customer created successfully.');
+        // Add notification message to the user's session or data
+        $message = 'New customer added '. $validatedData['name'];
+        $notifications = session()->get('notifications', []);
+        $notifications[] = $message;
+        session()->put('notifications', $notifications);
+
+        return redirect('admin/customers')->with('message', 'Customer created successfully.');
     }
 
 
@@ -118,8 +123,7 @@ class ClientsController extends Controller
         $customer->gst_no = $validatedData['gst_no'];
         $customer->description = $validatedData['description'];
         $customer->save();
-        return redirect('admin/customers')->with('success', 'Customer updated successfully.');
-
+        return redirect('admin/customers')->with('message', 'Customer updated successfully.');
     }
 
     /**
@@ -130,8 +134,11 @@ class ClientsController extends Controller
      */
     public function destroy(Customer $customer)
     {
+        // Check if the customer has associated invoices or quotations
+        if ($customer->invoices()->count() > 0 || $customer->quotations()->count() > 0) {
+            return redirect('admin/customers')->with('message', 'Cannot delete this customer. There are associated invoices or quotations.');
+        }
         $customer->delete();
-        return redirect('admin/customers')->with('success','customer deleted successfully.');
+        return redirect('admin/customers')->with('message', 'customer deleted successfully.');
     }
 }
-

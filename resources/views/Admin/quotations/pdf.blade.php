@@ -137,9 +137,7 @@
                                         <div class="col-xl-12">
                                             <p>Thank you for your purchase</p>
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -148,8 +146,6 @@
             </div>
         </div>
     </div>
-
-
 </body>
 
 </html>

@@ -1,88 +1,98 @@
 @extends('layouts.auth')
 
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-9">
-                <h1>Create Quotation</h1>
-            </div>
-            <div class="col-sm-2"><a href="{{ url('admin/quotations') }}" class="btn btn-sm btn-primary mb-3 ">BACK</a></div>
-        </div>
-<hr>
-        <form action="{{ url('admin/quotations') }}" method="POST">
-            @csrf
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="customer_id">Customer</label> <span> <a href="{{ url('admin/customers/create') }}" class="btn btn-sm btn-primary mb-3"></i>New
-                            Customers</a>
-                    </span>
-
-                        <select name="customer_id" id="customer_id" class="form-control w-50">
-                            @foreach ($customers as $customer)
-                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                            @endforeach
-                        </select>
-
-
-                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Create Quotation
+                        <a href="{{ url('admin/quotations') }}" class="btn btn-danger btn-sm text-white float-end">BACK</a>
+                    </h3>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group" style="margin-right:0">
-                        <label for="issue_date">Issue Date</label>
-                        <input type="date" name="issue_date" id="issue_date" class="form-control">
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group" style="margin-right:0">
-                        <label for="expiry_date">Expiry Date</label>
-                        <input type="date" name="expiry_date" id="expiry_date" class="form-control">
-                    </div>
-                </div>
-            </div>
 
-            <hr>
-            <h3>Quotation Items</h3>
-            <div id="quotation-items">
-                <div>
-                    <table class="table table-striped table-bordered">
-                        <thead style="background-color:#84B0CA;" class="text-white">
-                            <tr>
-                                <th>#</th>
-                                <th>Descriptions</th>
-                                <th>Service</th>
-                                <th>Quantity</th>
-                                {{-- <th>Rate</th>
-                                <th>Tax Amount</th> --}}
-                                <th>Delete Row</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" name="descriptions[]" id="descriptions" class="form-control"></td>
-                                <td>
-                                    <select name="service_id[]" id="service_id" class="form-control">
-                                        @foreach ($services as $service)
-                                            <option value="{{ $service->id }}">{{ $service->name }}</option>
+                <div class="card-body">
+                    <form action="{{ url('admin/quotations') }}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="customer_id">Customer</label>
+
+                                    <select name="customer_id" id="customer_id" class="form-control w-50">
+                                        @foreach ($customers as $customer)
+                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                         @endforeach
                                     </select>
-                                </td>
-                                <td><input type="text" name="quantity[]" id="quantity" class="form-control"></td>
-                                {{-- <td><input type="text" name="rate[]" id="rate" class="form-control"></td>
-                                <td><input type="text" name="tax[]" id="tax" class="form-control"></td> --}}
-                                <td><button class="btn btn-danger" id="btn_id" onclick="deleteRow(event)">Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    <span>
+                                        <p style="font-size: 16px; color: #000;">
+                                            <a href="{{ url('admin/customers/create') }}"
+                                                style="font-size: 16px; color: #000;">
+                                                <span style="font-family: Arial; font-weight: bold;">+</span> Add Customer
+                                            </a>
+                                        </p>
+                                    </span>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group" style="margin-right:0">
+                                    <label for="issue_date">Issue Date</label>
+                                    <input type="date" name="issue_date" id="issue_date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group" style="margin-right:0">
+                                    <label for="expiry_date">Expiry Date</label>
+                                    <input type="date" name="expiry_date" id="expiry_date" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h3>Quotation Items</h3>
+                        <div id="quotation-items">
+                            <div>
+                                <table class="table table-striped table-bordered">
+                                    <thead style="background-color:#84B0CA;" class="text-white">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Descriptions</th>
+                                            <th>Service</th>
+                                            <th>Quantity</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td><input type="text" name="descriptions[]" id="descriptions"
+                                                    class="form-control">
+                                            </td>
+                                            <td>
+                                                <select name="service_id[]" id="service_id" class="form-control">
+                                                    @foreach ($services as $service)
+                                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td><input type="text" name="quantity[]" id="quantity" class="form-control">
+                                            </td>
+                                            <td><button class="mdi mdi mdi-delete-forever" id="btn_id"
+                                                    onclick="deleteRow(event)">Delete</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <button type="button" class="mdi btn-success" onclick="addQuotationItem()">+Add Item</button>
+                        <hr>
+                        <button type="submit" class="btn btn-primary">Create Quotation</button>
+                    </form>
                 </div>
             </div>
-            <button type="button" class="btn btn-success" onclick="addQuotationItem()">Add Item</button>
-            <hr>
-            <button type="submit" class="btn btn-primary">Create Quotation</button>
-        </form>
-
+        </div>
     </div>
 
     <script>
@@ -127,23 +137,12 @@
             quantityCell.innerHTML = '<input type="text" name="quantity[]" class="form-control">';
             newRow.appendChild(quantityCell);
 
-            // // Create a rate cell
-            // var rateCell = document.createElement('td');
-            // rateCell.innerHTML = '<input type="text" name="rate[]" class="form-control">';
-            // newRow.appendChild(rateCell);
-
-            // // Create a tax cell
-            // var taxCell = document.createElement('td');
-            // taxCell.innerHTML = '<input type="text" name="tax[]" class="form-control">';
-            // newRow.appendChild(taxCell);
-
-
 
             // Create a delete button cell
             var deleteButtonCell = document.createElement('td');
             var deleteButton = document.createElement('button');
             deleteButton.setAttribute('type', 'button');
-            deleteButton.setAttribute('class', 'btn btn-danger');
+            deleteButton.setAttribute('class', 'mdi mdi mdi-delete-forever');
             deleteButton.setAttribute('onclick', 'deleteRow(this)');
             deleteButton.textContent = 'Delete';
             deleteButtonCell.appendChild(deleteButton);

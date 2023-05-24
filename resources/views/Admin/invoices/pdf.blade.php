@@ -129,14 +129,24 @@
                                                         class="text-black me-4">Tax(15%)</span>${{ $subtotal * 0.15 }}
                                                 </li>
                                             </ul>
-                                            <p class="text-black float-start"><span class="text-black me-3"> Total
-                                                    Amount</span><span
-                                                    style="font-size: 25px;">${{ $subtotal * 1.15 }}</span></p>
+                                            <p class="text-black float-start">
+                                                <span class="text-black me-3">
+                                                    Total Amount
+                                                </span>
+                                                <span style="font-size: 25px;">
+                                                    ${{ $subtotal * 1.15 }}
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div>
                                             <h3 style="color: {{ $invoice->payment_status == 1 ? 'green' : 'red' }};">
                                                 payment:
                                                 <span>{{ $invoice->payment_status == 1 ? 'successfull' : 'due' }}</span>
                                             </h3>
-
+                                            @if (!$invoice->payment_status)
+                                                <a href="{{ url('admin/invoices/' . $invoice->id . '/payment') }}"
+                                                    class="btn btn-sm btn-success">Payment</a>
+                                            @endif
                                         </div>
                                     </div>
                                     <hr>
