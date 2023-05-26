@@ -15,92 +15,48 @@
      </div>
      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
          <ul class="navbar-nav mr-lg-4 w-100">
-             <li class="nav-item nav-search d-none d-lg-block w-100">
-                 <form action="{{ url('admin/search') }}" method="GET">
-                     <div class="input-group">
-                         <div class="input-group-prepend">
-                             <span class="input-group-text" id="search">
-                                 <button type="submit" class=" btn mdi mdi-magnify"></button>
-                             </span>
-                         </div>
+            <li class="nav-item nav-search d-none d-lg-block w-100">
+                <form action="{{ url('admin/search') }}" method="GET">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="search">
+                                <button type="submit" class="btn mdi mdi-magnify"></button>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Search now" aria-label="search"
+                            aria-describedby="search" name="search" value="{{ session('lastSearch') }}"
+                            autocomplete="off" data-toggle="modal" data-target="#searchHistoryModal">
 
+                        <div class="input-group-append">
+                            <button type="submit" class="btn mdi mdi-account-search"></button>
+                        </div>
+                    </div>
+                </form>
 
-                         <input type="text" class="form-control" placeholder="Search now" aria-label="search"
-                             aria-describedby="search" name="search" value="{{ session('lastSearch') }}">
-
-
-
-                         <div class="input-group-append">
-                             <button type="submit" class=" btn mdi mdi-account-search"></button>
-                         </div>
-                         @if (session()->has('searchHistory'))
-                             <div class="dropdown search-history">
-                                 <button class="btn dropdown-toggle" type="button" id="searchHistoryDropdown"
-                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                     Search History
-                                 </button>
-                                 <div class="dropdown-menu" aria-labelledby="searchHistoryDropdown">
-                                     @foreach (session('searchHistory') as $search)
-                                         <a class="dropdown-item" href="#">{{ $search }}</a>
-                                     @endforeach
-                                 </div>
-                             </div>
-                         @endif
-
-                     </div>
-
-                 </form>
-             </li>
-
-
+                @if (session()->has('searchHistory'))
+                    <div class="modal fade" id="searchHistoryModal" tabindex="-1" role="dialog" aria-labelledby="searchHistoryModalLabel" aria-hidden="true" data-backdrop="false">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="searchHistoryModalLabel">Search History</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-group">
+                                        @foreach (session('searchHistory') as $search)
+                                            <li class="list-group-item" onclick="document.querySelector('input[name=search]').value='{{ $search }}';">{{ $search }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </li>
          </ul>
          <ul class="navbar-nav navbar-nav-right">
-             <li class="nav-item dropdown me-1">
-                 <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
-                     id="messageDropdown" href="#" data-bs-toggle="dropdown">
-                     <i class="mdi mdi-message-text mx-0"></i>
-                     <span class="count"></span>
-                 </a>
-                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="messageDropdown">
-                     <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
-                     <a class="dropdown-item">
-                         <div class="item-thumbnail">
-                             <img src="images/faces/face4.jpg" alt="image" class="profile-pic">
-                         </div>
-                         <div class="item-content flex-grow">
-                             <h6 class="ellipsis font-weight-normal">David Grey
-                             </h6>
-                             <p class="font-weight-light small-text text-muted mb-0">
-                                 The meeting is cancelled
-                             </p>
-                         </div>
-                     </a>
-                     <a class="dropdown-item">
-                         <div class="item-thumbnail">
-                             <img src="images/faces/face2.jpg" alt="image" class="profile-pic">
-                         </div>
-                         <div class="item-content flex-grow">
-                             <h6 class="ellipsis font-weight-normal">Tim Cook
-                             </h6>
-                             <p class="font-weight-light small-text text-muted mb-0">
-                                 New product launch
-                             </p>
-                         </div>
-                     </a>
-                     <a class="dropdown-item">
-                         <div class="item-thumbnail">
-                             <img src="images/faces/face3.jpg" alt="image" class="profile-pic">
-                         </div>
-                         <div class="item-content flex-grow">
-                             <h6 class="ellipsis font-weight-normal"> Johnson
-                             </h6>
-                             <p class="font-weight-light small-text text-muted mb-0">
-                                 Upcoming board meeting
-                             </p>
-                         </div>
-                     </a>
-                 </div>
-             </li>
              <li class="nav-item dropdown me-4">
                  <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center notification-dropdown"
                      id="notificationDropdown" href="#" data-bs-toggle="dropdown">
@@ -128,8 +84,6 @@
                          <p class="dropdown-item mb-0">No new notifications</p>
                      @endforelse
                  </div>
-
-
              </li>
              <li class="nav-item nav-profile dropdown">
                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">

@@ -5,20 +5,19 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h3>Create Invoice
-                        <a href="{{ url('admin/invoices') }}" class="btn btn-danger btn-sm text-white float-end">BACK</a>
-                    </h3>
+                    <h5>Create Invoice
+                        <a href="{{ url('admin/invoices') }}" class=" btn btn-outline-danger btn-sm  float-end">BACK</a>
+                    </h5>
                 </div>
 
                 <div class="card-body">
                     <form action="{{ url('admin/invoices') }}" method="POST">
                         @csrf
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-sm-6 col-md-3">
                                 <div class="form-group">
                                     <label for="customer_id">Customer</label>
-
-                                    <select name="customer_id" id="customer_id" class="form-control w-50">
+                                    <select name="customer_id" id="customer_id" class="form-control ">
                                         @foreach ($customers as $customer)
                                             <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                         @endforeach
@@ -33,7 +32,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-sm-6 col-md-3">
                                 <div class="form-group">
                                     <label for="payment_status">Payment status</label>
                                     <select id="payment_status" name="payment_status" class="form-control">
@@ -44,13 +43,13 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-sm-6 col-md-3">
                                 <div class="form-group" style="margin-right:0">
                                     <label for="issue_date">Issue Date</label>
                                     <input type="date" name="issue_date" id="issue_date" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-sm-6 col-md-3">
                                 <div class="form-group" style="margin-right:0">
                                     <label for="expiry_date">Expiry Date</label>
                                     <input type="date" name="expiry_date" id="expiry_date" class="form-control">
@@ -68,7 +67,10 @@
                                             <th>Descriptions</th>
                                             <th>Service</th>
                                             <th>Quantity</th>
+                                            <th>rate</th>
+                                            <th>tax_rate</th>
                                             <th>Discount</th>
+                                            <th>amount</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -88,27 +90,57 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="text" name="quantity[]" id="quantity" class="form-control">
+                                                <input type="text" name="quantity[]" id="quantity" class="form-control"  oninput="calculateAmount(this)">
                                             </td>
                                             <td>
-                                                <input type="text" name="discount[]" id="discount" class="form-control">
+                                                <input type="text" name="rate[]" id="rate" class="form-control" oninput="calculateAmount(this)">
                                             </td>
                                             <td>
-                                                <button class=" btn mdi mdi-delete-forever" id="btn_id" onclick="deleteRow(event)">Delete</button>
+                                                <input type="text" name="tax_rate[]" id="tax_rate" class="form-control" oninput="calculateAmount(this)">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="discount[]" id="discount" class="form-control" oninput="calculateAmount(this)">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="amount[]" id="amount" class="form-control" readonly>
+                                            </td>
+
+                                            <td>
+                                                <button class="mdi btn-inverse-danger" id="btn_id"
+                                                    onclick="deleteRow(event)">Delete</button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <button type="button" class=" mdi btn-success " onclick="addInvoiceItem()">+Add New</button>
+                        <button type="button" class="mdi btn-inverse-success " onclick="addInvoiceItem()">+Add New</button>
                         <hr>
-                        <button type="submit" class="btn btn-primary">Create invoice</button>
+                        <button type="submit" class="mdi btn-inverse-primary">Create invoice</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        function calculateAmount(input) {
+            var row = input.parentNode.parentNode;
+            var quantity = row.querySelector('input[name="quantity[]"]').value;
+            var rate = row.querySelector('input[name="rate[]"]').value;
+            var tax_rate = row.querySelector('input[name="tax_rate[]"]').value;
+            var discount = row.querySelector('input[name="discount[]"]').value;
+
+            var qAmount = quantity * rate;
+            var totalTax = qAmount * (tax_rate / 100);
+            var totalAmountItem = qAmount + totalTax;
+
+            var discountTax = totalAmountItem * (discount / 100);
+            var discountAmount = totalAmountItem - discountTax;
+
+            row.querySelector('input[name="amount[]"]').value = discountAmount.toFixed(2);
+        }
+    </script>
+
 
     <script>
         var cur_count = 1
@@ -149,19 +181,59 @@
 
             // Create a quantity cell
             var quantityCell = document.createElement('td');
-            quantityCell.innerHTML = '<input type="text" name="quantity[]" class="form-control">';
+            var quantityInput = document.createElement('input');
+            quantityInput.setAttribute('type', 'text');
+            quantityInput.setAttribute('name', 'quantity[]');
+            quantityInput.setAttribute('class', 'form-control');
+            quantityInput.setAttribute('oninput', 'calculateAmount(this)');
+            quantityCell.appendChild(quantityInput);
             newRow.appendChild(quantityCell);
 
             // Create a rate cell
             var rateCell = document.createElement('td');
-            rateCell.innerHTML = '<input type="text" name="discount[]" class="form-control">';
+            var rateInput = document.createElement('input');
+            rateInput.setAttribute('type', 'text');
+            rateInput.setAttribute('name', 'rate[]');
+            rateInput.setAttribute('class', 'form-control');
+            rateInput.setAttribute('oninput', 'calculateAmount(this)');
+            rateCell.appendChild(rateInput);
             newRow.appendChild(rateCell);
+
+            // Create a tax_rate cell
+            var tax_rateCell = document.createElement('td');
+            var tax_rateInput = document.createElement('input');
+            tax_rateInput.setAttribute('type', 'text');
+            tax_rateInput.setAttribute('name', 'tax_rate[]');
+            tax_rateInput.setAttribute('class', 'form-control');
+            tax_rateInput.setAttribute('oninput', 'calculateAmount(this)');
+            tax_rateCell.appendChild(tax_rateInput);
+            newRow.appendChild(tax_rateCell);
+
+            // Create a discount cell
+            var discountCell = document.createElement('td');
+            var discountInput = document.createElement('input');
+            discountInput.setAttribute('type', 'text');
+            discountInput.setAttribute('name', 'discount[]');
+            discountInput.setAttribute('class', 'form-control');
+            discountInput.setAttribute('oninput', 'calculateAmount(this)');
+            discountCell.appendChild(discountInput);
+            newRow.appendChild(discountCell);
+
+            // Create a amount cell
+            var amountCell = document.createElement('td');
+            var amountInput = document.createElement('input');
+            amountInput.setAttribute('type', 'text');
+            amountInput.setAttribute('name', 'amount[]');
+            amountInput.setAttribute('class', 'form-control');
+            amountInput.setAttribute('readonly', 'readonly');
+            amountCell.appendChild(amountInput);
+            newRow.appendChild(amountCell);
 
             // Create a delete button cell
             var deleteButtonCell = document.createElement('td');
             var deleteButton = document.createElement('button');
             deleteButton.setAttribute('type', 'button');
-            deleteButton.setAttribute('class', 'btn mdi mdi-delete-forever');
+            deleteButton.setAttribute('class', 'mdi btn-inverse-danger');
             deleteButton.setAttribute('onclick', 'deleteRow(this)');
             deleteButton.textContent = 'Delete';
             deleteButtonCell.appendChild(deleteButton);

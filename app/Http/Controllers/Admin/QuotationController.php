@@ -20,8 +20,8 @@ class QuotationController extends Controller
      */
     public function index()
     {
-        $quotations = Quotation::paginate(1);
-        $quotationItems = QuotationItem::paginate(1);
+        $quotations = Quotation::paginate(5);
+        $quotationItems = QuotationItem::paginate(5);
 
         return view('Admin.quotations.index', compact('quotations', 'quotationItems'));
     }
@@ -51,6 +51,9 @@ class QuotationController extends Controller
             'service_id.*' => 'required',
             'quantity.*' => 'required|numeric|min:0',
             'descriptions.*' => 'required',
+            'rate.*' => 'required|numeric|min:0',
+            'tax_rate.*' => 'required|numeric|min:0',
+            'amount.*' => 'required|numeric|min:0',
             'issue_date' => 'required|date_format:Y-m-d',
             'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
         ]);
@@ -62,32 +65,34 @@ class QuotationController extends Controller
         $quotation->expiry_date = $validatedData['expiry_date'];
         $quotation->save();
 
-        $totalAmount   = 0;
+        $totalAmount = 0;
 
         foreach ($validatedData['service_id'] as $key => $serviceId) {
-            $service = Service::findOrFail($serviceId);
+            $quantity = $validatedData['quantity'][$key];
+            $rate = $validatedData['rate'][$key];
+            $taxRate = $validatedData['tax_rate'][$key];
+            $amount = $validatedData['amount'][$key];
 
-            $qAmount = $validatedData['quantity'][$key] * $service->price;
-            $totaltax = $qAmount * ($service->tax_rate / 100);
-            $totalAmountItem  = $qAmount + $totaltax;
-            $totalAmount  += $totalAmountItem;
+            $totalAmount += $amount;
 
             $quotationItem = new QuotationItem();
             $quotationItem->uuid = Str::uuid();
             $quotationItem->quotation_id = $quotation->id;
             $quotationItem->service_id = $serviceId;
-            $quotationItem->quantity = $validatedData['quantity'][$key];
-            $quotationItem->rate = $service->price;
+            $quotationItem->quantity = $quantity;
+            $quotationItem->rate = $rate;
             $quotationItem->description = $validatedData['descriptions'][$key];
-            $quotationItem->tax_rate = $service->tax_rate;
-            $quotationItem->amount = $totalAmountItem;
+            $quotationItem->tax_rate = $taxRate;
+            $quotationItem->amount = $amount;
             $quotationItem->save();
         }
+
         $quotation->total_amount = $totalAmount;
         $quotation->save();
 
-        return redirect('admin/quotations')->with('success', 'Quotation created successfully.');
+        return redirect('admin/quotations')->with('message', 'Quotation created successfully.');
     }
+
 
 
     /**
@@ -98,7 +103,13 @@ class QuotationController extends Controller
      */
     public function show(Quotation $quotation)
     {
-        return view('Admin.quotations.show', compact('quotation'));
+        $prefix = 'TCPIPL/QN/';
+        $count = Quotation::where('id', '<=', $quotation->id)->count();
+        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $quotationId = $prefix . $formattedCount;
+        $subtotal = $quotation->total_amount;
+        return view('Admin.quotations.show', compact('quotation', 'quotationId', 'subtotal'));
+
     }
 
     /**
@@ -130,6 +141,9 @@ class QuotationController extends Controller
             'service_id.*' => 'required',
             'quantity.*' => 'required|numeric|min:0',
             'descriptions.*' => 'required',
+            'rate.*' => 'required|numeric|min:0',
+            'tax_rate.*' => 'required|numeric|min:0',
+            'amount.*' => 'required|numeric|min:0',
             'issue_date' => 'required|date_format:Y-m-d',
             'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
         ]);
@@ -143,31 +157,32 @@ class QuotationController extends Controller
         // Delete existing quotation items
         $quotation->quotationItems()->delete();
 
-        $subtotal = 0;
+        $totalAmount = 0;
 
         foreach ($validatedData['service_id'] as $key => $serviceId) {
-            $service = Service::findOrFail($serviceId);
+            $quantity = $validatedData['quantity'][$key];
+            $rate = $validatedData['rate'][$key];
+            $taxRate = $validatedData['tax_rate'][$key];
+            $amount = $validatedData['amount'][$key];
 
-            $qAmount = $validatedData['quantity'][$key] * $service->price;
-            $totaltax = $qAmount * ($service->tax_rate / 100);
-            $totalAmount = $qAmount + $totaltax;
-            $subtotal += $totalAmount;
+
+            $totalAmount += $amount;
 
             $quotationItem = new QuotationItem();
             $quotationItem->uuid = Str::uuid();
             $quotationItem->quotation_id = $quotation->id;
             $quotationItem->service_id = $serviceId;
-            $quotationItem->quantity = $validatedData['quantity'][$key];
-            $quotationItem->rate = $service->price;
+            $quotationItem->quantity = $quantity;
+            $quotationItem->rate = $rate;
             $quotationItem->description = $validatedData['descriptions'][$key];
-            $quotationItem->tax_rate = $service->tax_rate;
-            $quotationItem->amount = $totalAmount;
+            $quotationItem->tax_rate = $taxRate;
+            $quotationItem->amount = $amount;
             $quotationItem->save();
         }
-        $quotation->total_amount = $subtotal;
+        $quotation->total_amount = $totalAmount;
         $quotation->save();
 
-        return redirect('admin/quotations')->with('success', 'Quotation updated successfully.');
+        return redirect('admin/quotations')->with('message', 'Quotation updated successfully.');
     }
 
 
@@ -183,15 +198,20 @@ class QuotationController extends Controller
         $quotation->delete();
 
         return redirect('admin/quotations')
-            ->with('success', 'Quotation deleted successfully.');
+            ->with('message', 'Quotation deleted successfully.');
     }
 
     public function pdf(Quotation $quotation)
     {
+        $prefix = 'TCPIPL/QN/';
+        $count = Quotation::where('id', '<=', $quotation->id)->count();
+        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $quotationId = $prefix . $formattedCount;
+        $subtotal = $quotation->total_amount;
 
         $customers = Customer::all();
         $services = Service::all();
 
-        return view('Admin.quotations.pdf', compact('quotation', 'customers', 'services'));
+        return view('Admin.quotations.pdf', compact('quotation', 'customers', 'services', 'quotationId', 'subtotal'));
     }
 }

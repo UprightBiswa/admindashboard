@@ -21,21 +21,21 @@ class InvoiceController extends Controller
     public function index(Invoice  $invoice)
     {
 
-        // Add tax rate of current item to total tax rate
-        $invoiceItems = $invoice->invoice_items;
-        $totalTaxRate = 0;
+        // // Add tax rate of current item to total tax rate
+        // $invoiceItems = $invoice->invoice_items;
+        // $totalTaxRate = 0;
 
-        if ($invoiceItems) {
-            foreach ($invoiceItems as $invoiceItem) {
-                $service = $invoiceItem->service;
-                $totalTaxRate += $service->tax_rate;
-            }
-        }
+        // if ($invoiceItems) {
+        //     foreach ($invoiceItems as $invoiceItem) {
+        //         $service = $invoiceItem->service;
+        //         $totalTaxRate += $service->tax_rate;
+        //     }
+        // }
 
-        $invoices  = Invoice::paginate(3);
-        $invoiceItem = InvoiceItem::paginate(3);
+        $invoices  = Invoice::paginate(5);
+        $invoiceItem = InvoiceItem::paginate(5);
 
-        return view('Admin.invoices.index', compact('invoices', 'invoiceItem', 'totalTaxRate'));
+        return view('Admin.invoices.index', compact('invoices', 'invoiceItem', ));
     }
 
     /**
@@ -69,7 +69,10 @@ class InvoiceController extends Controller
             'service_id.*' => 'required',
             'payment_status' => 'required|in:0,1',
             'quantity.*' => 'required|numeric|min:0',
+            'rate.*' => 'required|numeric|min:0',
+            'tax_rate.*' => 'required|numeric|min:0',
             'discount.*' => 'nullable|numeric|min:0|max:100',
+            'amount.*' => 'required|numeric|min:0',
             'descriptions.*' => 'required',
             'issue_date' => 'required|date_format:Y-m-d',
             'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
@@ -86,25 +89,24 @@ class InvoiceController extends Controller
         $totalAmount = 0;
 
         foreach ($validatedData['service_id'] as $key => $serviceId) {
-            $service = Service::findOrFail($serviceId);
+            $quantity = $validatedData['quantity'][$key];
+            $rate = $validatedData['rate'][$key];
+            $tax_rate = $validatedData['tax_rate'][$key];
+            $discount = $validatedData['discount'][$key];
+            $amount = $validatedData['amount'][$key];
 
-            $qAmount = $validatedData['quantity'][$key] * $service->price;
-            $totaltax = $qAmount * ($service->tax_rate / 100);
-            $totalAmountItem  = $qAmount + $totaltax;
-            $discounttax = $totalAmountItem * ($validatedData['discount'][$key] / 100);
-            $discountamount = $totalAmountItem - $discounttax;
-            $totalAmount += $discountamount;
+            $totalAmount += $amount;
 
             $invoiceItem = new InvoiceItem();
             $invoiceItem->uuid = Str::uuid();
             $invoiceItem->invoice_id = $invoice->id;
             $invoiceItem->service_id = $serviceId;
-            $invoiceItem->quantity = $validatedData['quantity'][$key];
-            $invoiceItem->rate = $service->price;
+            $invoiceItem->quantity = $quantity;
+            $invoiceItem->rate = $rate;
             $invoiceItem->description = $validatedData['descriptions'][$key];
-            $invoiceItem->tax_rate = $service->tax_rate;
-            $invoiceItem->amount = $discountamount;
-            $invoiceItem->discount = $validatedData['discount'][$key];
+            $invoiceItem->tax_rate = $tax_rate;
+            $invoiceItem->discount = $discount;
+            $invoiceItem->amount = $amount;
             $invoiceItem->save();
         }
 
@@ -113,7 +115,7 @@ class InvoiceController extends Controller
 
 
 
-        return redirect('admin/invoices')->with('success', 'Invoice created successfully.');
+        return redirect('admin/invoices')->with('message', 'Invoice created successfully.');
     }
 
 
@@ -125,7 +127,13 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        return view('Admin.invoices.show', compact('invoice'));
+        $prefix = 'TCPIPL/IN/';
+        $count = Invoice::where('id', '<=', $invoice->id)->count();
+        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $invoiceId = $prefix . $formattedCount;
+        $subtotal = $invoice->total_amount;
+
+        return view('Admin.invoices.show', compact('invoice', 'invoiceId', 'subtotal'));
     }
 
     /**
@@ -161,7 +169,10 @@ class InvoiceController extends Controller
             'service_id.*' => 'required',
             'payment_status' => 'required|in:0,1',
             'quantity.*' => 'required|numeric|min:0',
+            'rate.*' => 'required|numeric|min:0',
+            'tax_rate.*' => 'required|numeric|min:0',
             'discount.*' => 'nullable|numeric|min:0|max:100',
+            'amount.*' => 'required|numeric|min:0',
             'descriptions.*' => 'required',
             'issue_date' => 'required|date_format:Y-m-d',
             'expiry_date' => 'required|date_format:Y-m-d|after:issue_date',
@@ -169,7 +180,7 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::findOrFail($id);
         if ($invoice->payment_status == 1) {
-            return redirect('admin/invoices')->with('error', 'Cannot update a paid invoice.');
+            return redirect('admin/invoices')->with('message', 'Cannot update a paid invoice.');
         }
 
         $invoice->customer_id = $validatedData['customer_id'];
@@ -183,32 +194,31 @@ class InvoiceController extends Controller
         $totalAmount = 0;
 
         foreach ($validatedData['service_id'] as $key => $serviceId) {
-            $service = Service::findOrFail($serviceId);
+            $quantity = $validatedData['quantity'][$key];
+            $rate = $validatedData['rate'][$key];
+            $tax_rate = $validatedData['tax_rate'][$key];
+            $discount = $validatedData['discount'][$key];
+            $amount = $validatedData['amount'][$key];
 
-            $qAmount = $validatedData['quantity'][$key] * $service->price;
-            $totaltax = $qAmount * ($service->tax_rate / 100);
-            $totalAmountItem  = $qAmount + $totaltax;
-            $discounttax = $totalAmountItem * ($validatedData['discount'][$key] / 100);
-            $discountamount = $totalAmountItem - $discounttax;
-            $totalAmount += $discountamount;
+            $totalAmount += $amount;
 
             $invoiceItem = new InvoiceItem();
             $invoiceItem->uuid = Str::uuid();
             $invoiceItem->invoice_id = $invoice->id;
             $invoiceItem->service_id = $serviceId;
-            $invoiceItem->quantity = $validatedData['quantity'][$key];
-            $invoiceItem->rate = $service->price;
+            $invoiceItem->quantity = $quantity;
+            $invoiceItem->rate = $rate;
             $invoiceItem->description = $validatedData['descriptions'][$key];
-            $invoiceItem->tax_rate = $service->tax_rate;
-            $invoiceItem->amount = $discountamount;
-            $invoiceItem->discount = $validatedData['discount'][$key];
+            $invoiceItem->tax_rate = $tax_rate;
+            $invoiceItem->discount = $discount;
+            $invoiceItem->amount = $amount;
             $invoiceItem->save();
         }
 
         $invoice->total_amount = $totalAmount;
         $invoice->save();
 
-        return redirect('admin/invoices')->with('success', 'Invoice updated successfully.');
+        return redirect('admin/invoices')->with('message', 'Invoice updated successfully.');
     }
 
 
@@ -230,17 +240,23 @@ class InvoiceController extends Controller
 
     public function pdf(Invoice $invoice)
     {
+        $prefix = 'TCPIPL/IN/';
+        $count = Invoice::where('id', '<=', $invoice->id)->count();
+        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $invoiceId = $prefix . $formattedCount;
+        $subtotal = $invoice->total_amount;
 
         $customers = Customer::all();
         $services = Service::all();
         $payments = Payment::all();
 
-        return view('Admin.invoices.pdf', compact('invoice', 'customers', 'services', 'payments'));
+        return view('Admin.invoices.pdf', compact('invoice', 'customers', 'services', 'payments', 'invoiceId','subtotal'));
     }
 
     public function paymentDetails(Invoice $invoice)
     {
-        return view('admin.payment.details', compact('invoice'));
+        $customer = $invoice->customer;
+        return view('admin.payment.details', compact('invoice','customer'));
     }
 
     public function submitPayment(Request $request, Invoice $invoice)
@@ -248,7 +264,7 @@ class InvoiceController extends Controller
         $customer = $invoice->customer;
 
         $payment = new Payment;
-        $payment->customer_id = $invoice->id;
+        $payment->customer_id = $customer->id;
         $payment->payment_date = $request->payment_date;
         $payment->sub_total = $request->sub_total;
         $payment->transaction_id = $request->transaction_id;
@@ -261,6 +277,6 @@ class InvoiceController extends Controller
         $invoice->save();
 
         return redirect('admin/invoices')
-            ->with('success', 'Payment submitted successfully.');
+            ->with('message', 'Payment submitted successfully.');
     }
 }

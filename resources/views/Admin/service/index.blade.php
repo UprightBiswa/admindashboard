@@ -8,8 +8,8 @@
             @endif
             <div class="card">
                 <div class="card-header">
-                    <h3> service <a href="{{ url('admin/services/create') }}" class="btn btn-sm btn-primary float-end">New
-                            Services</a> </h3>
+                    <h5> service <a href="{{ url('admin/services/create') }}" class="btn btn-sm btn-primary float-end">New
+                            Services</a> </h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -31,14 +31,14 @@
                                         <td>{{ $service->price }}</td>
                                         <td>{{ $service->HSN_code }}</td>
                                         <td>
-                                            <a href="{{ url('admin/services', $service) }}" class=" btn mdi mdi-yeast"></a>
+                                            <a href="{{ url('admin/services', $service) }}" class="mdi mdi-eye me-3 icon-lg text-success"></a>
                                             <a href="{{ url('admin/services/' . $service->id . '/edit') }}"
-                                                class="btn mdi mdi-border-color"></a>
+                                                class=" mdi mdi-tooltip-edit me-3 icon-lg text-warning"></a>
                                             <form method="POST" action="{{ url('admin/services/' . $service->id) }}"
                                                 class="d-inline-block">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn mdi mdi-delete-forever"
+                                                <button type="submit" class=" mdi mdi-delete-forever me-3 icon-lg text-danger"
                                                     onclick="return confirm('Are you sure you want to delete this service?')"></button>
                                             </form>
                                         </td>

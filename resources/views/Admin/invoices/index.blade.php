@@ -8,14 +8,14 @@
             @endif
             <div class="card">
                 <div class="card-header">
-                    <h3>Invoice
+                    <h5>Invoice
                         <a href="{{ url('admin/invoices/create') }}" class="btn btn-sm btn-primary float-end">New
                             Invoice</a>
-                    </h3>
+                    </h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="dataTable">
+                        <table class="table table-bordered table-striped "  id="recent-purchases-listing">
                             <thead>
                                 <tr>
                                     <th>S No</th>
