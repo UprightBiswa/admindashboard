@@ -67,6 +67,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::put('/quotations/{quotation}', 'update');
         Route::delete('/quotations/{quotation}', 'destroy');
         Route::get('/quotations/pdf/{quotation}', 'pdf');
+        Route::get('/quotations/mail/{quotation}', 'mailQuotation');
+
     });
 
      //invoice route

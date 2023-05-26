@@ -64,10 +64,18 @@ class ClientsController extends Controller
         $customer->save();
 
         // Add notification message to the user's session or data
-        $message = 'New customer added '. $validatedData['name'];
+        $message = 'New customer added Name:' . $validatedData['name'];
+        $time = now()->toDateTimeString();
+
         $notifications = session()->get('notifications', []);
-        $notifications[] = $message;
+        $notifications[] = [
+            'message' => $message,
+            'time' => $time,
+        ];
+
         session()->put('notifications', $notifications);
+
+
 
         return redirect('admin/customers')->with('message', 'Customer created successfully.');
     }

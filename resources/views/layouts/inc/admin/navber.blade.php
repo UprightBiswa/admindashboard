@@ -14,54 +14,101 @@
          </div>
      </div>
      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+         {{-- <ul class="navbar-nav mr-lg-4 w-100">
+             <li class="nav-item nav-search d-none d-lg-block w-100">
+                 <form action="{{ url('admin/search') }}" method="GET">
+                     <div class="input-group">
+                         <div class="input-group-prepend">
+                             <span class="input-group-text" id="search">
+                                 <button type="submit" class="btn mdi mdi-magnify"></button>
+                             </span>
+                         </div>
+                         <input type="text" class="form-control" placeholder="Search now" aria-label="search"
+                             aria-describedby="search" name="search" value="{{ session('lastSearch') }}"
+                             autocomplete="off" data-toggle="modal" data-target="#searchHistoryModal">
+
+                         <div class="input-group-append">
+                             <button type="submit" class="btn mdi mdi-account-search"></button>
+                         </div>
+                     </div>
+                 </form>
+
+                 @if (session()->has('searchHistory'))
+                     <div class="modal fade" id="searchHistoryModal" tabindex="-1" role="dialog"
+                         aria-labelledby="searchHistoryModalLabel" aria-hidden="true" data-backdrop="false">
+                         <div class="modal-dialog" role="document">
+                             <div class="modal-content">
+                                 <div class="modal-header">
+                                     <h5 class="modal-title" id="searchHistoryModalLabel">Search History</h5>
+                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                         <span aria-hidden="true">&times;</span>
+                                     </button>
+                                 </div>
+                                 <div class="modal-body">
+                                     <ul class="list-group">
+                                         @foreach (session('searchHistory') as $search)
+                                             <li class="list-group-item"
+                                                 onclick="document.querySelector('input[name=search]').value='{{ $search }}';">
+                                                 {{ $search }}</li>
+                                         @endforeach
+                                     </ul>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 @endif
+             </li>
+         </ul> --}}
          <ul class="navbar-nav mr-lg-4 w-100">
-            <li class="nav-item nav-search d-none d-lg-block w-100">
-                <form action="{{ url('admin/search') }}" method="GET">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="search">
-                                <button type="submit" class="btn mdi mdi-magnify"></button>
-                            </span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Search now" aria-label="search"
-                            aria-describedby="search" name="search" value="{{ session('lastSearch') }}"
-                            autocomplete="off" data-toggle="modal" data-target="#searchHistoryModal">
+             <li class="nav-item nav-search d-none d-lg-block w-100">
+                 <form action="{{ url('admin/search') }}" method="GET">
+                     <div class="input-group">
+                         <div class="input-group-prepend">
+                             <span class="input-group-text" id="search">
+                                 <button type="submit" class="btn mdi mdi-magnify"></button>
+                             </span>
+                         </div>
+                         <input type="text" class="form-control" placeholder="Search now" aria-label="search"
+                             aria-describedby="search" name="search" value="{{ session('lastSearch') }}"
+                             autocomplete="off">
 
-                        <div class="input-group-append">
-                            <button type="submit" class="btn mdi mdi-account-search"></button>
-                        </div>
-                    </div>
-                </form>
-
-                @if (session()->has('searchHistory'))
-                    <div class="modal fade" id="searchHistoryModal" tabindex="-1" role="dialog" aria-labelledby="searchHistoryModalLabel" aria-hidden="true" data-backdrop="false">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="searchHistoryModalLabel">Search History</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <ul class="list-group">
-                                        @foreach (session('searchHistory') as $search)
-                                            <li class="list-group-item" onclick="document.querySelector('input[name=search]').value='{{ $search }}';">{{ $search }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            </li>
+                         <div class="input-group-append">
+                             <button type="submit" class="btn mdi mdi-account-search"></button>
+                         </div>
+                     </div>
+                 </form>
+             </li>
          </ul>
+         <ul class="navbar-nav navbar-nav-right">
+             <li class="nav-item nav-profile dropdown">
+                 <a class="nav-link dropdown-toggle" id="searchhistoryDropdown" href="#"
+                     data-bs-toggle="dropdown">
+                     <span class="nav-profile-name">Search History</span>
+                 </a>
+                 <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="searchhistoryDropdown">
+                     @if (session()->has('searchHistory'))
+                         @foreach (session('searchHistory') as $search)
+                             <a class="dropdown-item" href="{{ url('admin/search') }}?search={{ $search }}">
+                                 {{ $search }}
+                             </a>
+                         @endforeach
+                     @else
+                         <a class="dropdown-item" href="#">No search history available</a>
+                     @endif
+                 </div>
+             </li>
+         </ul>
+
+
+
          <ul class="navbar-nav navbar-nav-right">
              <li class="nav-item dropdown me-4">
                  <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center notification-dropdown"
                      id="notificationDropdown" href="#" data-bs-toggle="dropdown">
                      <i class="mdi mdi-bell mx-0"></i>
-                     <span class="count"></span>
+                     @if (count(session('notifications', [])) > 0)
+                         <span class="count"></span>
+                     @endif
                  </a>
 
                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="notificationDropdown">
@@ -74,9 +121,10 @@
                                  </div>
                              </div>
                              <div class="item-content">
-                                 <h6 class="font-weight-normal">{{ $notification }}</h6>
+                                 <h6 class="font-weight-normal">{{ $notification['message'] ?? '' }}</h6>
+
                                  <p class="font-weight-light small-text mb-0 text-muted">
-                                     {{ now()->diffForHumans() }}
+                                     {{ $notification['time'] ?? '' }}
                                  </p>
                              </div>
                          </a>
@@ -84,6 +132,8 @@
                          <p class="dropdown-item mb-0">No new notifications</p>
                      @endforelse
                  </div>
+
+
              </li>
              <li class="nav-item nav-profile dropdown">
                  <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
@@ -91,10 +141,12 @@
                      <span class="nav-profile-name">{{ Auth::user()->name }}</span>
                  </a>
                  <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                     <a class="dropdown-item">
-                         <i class="mdi mdi-settings text-primary"></i>
-                         Settings
-                     </a>
+                     @if (Route::has('password.request'))
+                         <a class="dropdown-item"href="{{ route('password.request') }}">
+                             <i class="mdi mdi-settings text-primary"></i>
+                             {{ __('Forgot Your Password?') }}
+                         </a>
+                     @endif
 
                      <a class="dropdown-item" href="{{ route('logout') }}"
                          onclick="event.preventDefault();

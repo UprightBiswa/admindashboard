@@ -15,18 +15,21 @@
                             <div class="card-body">
                                 <div class="container mb-5 mt-3">
                                     <div class="row d-flex align-items-baseline">
-                                        <div class="col-xl-9">
+                                        <div class="col-xl-8">
                                             <p style="color: #934545;font-size: 20px;">Quotation >> <strong>ID:
                                                     #{{ $quotationId }}</strong></p>
 
                                         </div>
-                                        <div class="col-xl-3 float-end">
+                                        <div class="col-xl-4 float-end">
                                             <a href="{{ url('admin/quotations/pdf', $quotation) }}" target="_blank"
                                                 class="btn btn-light text-capitalize border-0" data-mdb-ripple-color="dark">
                                                 <i class="mdi mdi-printer text-primary "></i> Print</a>
                                             <a href="{{ url('admin/quotations/pdf', $quotation) }}"
                                                 class="btn btn-light text-capitalize" data-mdb-ripple-color="dark">
                                                 <i class="mdi mdi-file-pdf text-danger"></i> Export</a>
+                                            <a href="{{ url('admin/quotations/mail', $quotation->id) }}"
+                                                class="btn btn-light text-capitalize" data-mdb-ripple-color="dark">
+                                                <i class="mdi mdi-file-pdf text-danger"></i> send mail</a>
                                         </div>
                                     </div>
                                     <hr>

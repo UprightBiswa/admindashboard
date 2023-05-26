@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Mail\QuotationEmail;
+use Illuminate\Support\Facades\Mail;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use pdf;
 use App\Models\Service;
 use App\Models\Customer;
 use App\Models\Quotation;
@@ -9,7 +14,6 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\QuotationItem;
 use App\Http\Controllers\Controller;
-use pdf;
 
 class QuotationController extends Controller
 {
@@ -109,7 +113,6 @@ class QuotationController extends Controller
         $quotationId = $prefix . $formattedCount;
         $subtotal = $quotation->total_amount;
         return view('Admin.quotations.show', compact('quotation', 'quotationId', 'subtotal'));
-
     }
 
     /**
@@ -213,5 +216,33 @@ class QuotationController extends Controller
         $services = Service::all();
 
         return view('Admin.quotations.pdf', compact('quotation', 'customers', 'services', 'quotationId', 'subtotal'));
+    }
+
+
+    public function mailQuotation(Quotation $quotation)
+    {
+        $prefix = 'TCPIPL/QN/';
+        $count = Quotation::where('id', '<=', $quotation->id)->count();
+        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $quotationId = $prefix . $formattedCount;
+        $subtotal = $quotation->total_amount;
+
+        // Retrieve the necessary data for the quotation email, such as customer details, quotation information, etc.
+        $customerEmail = $quotation->customer->email;
+
+        // Create an instance of the QuotationEmail Mailable and pass the necessary data
+        $mail = new QuotationEmail($quotation, $quotationId, $subtotal);
+
+        // Send the email
+        Mail::to($customerEmail)->send($mail);
+
+        // Optionally, you can check if the email was sent successfully
+        if (Mail::failures()) {
+            // Email sending failed
+            return redirect('admin/quotations')->with('message', 'Failed to send quotation email');
+        }
+
+        // Email sent successfully
+        return redirect('admin/quotations')->with('message','Quotation email sent to : '. $quotation->customer->email );
     }
 }
