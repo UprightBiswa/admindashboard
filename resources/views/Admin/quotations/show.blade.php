@@ -29,7 +29,7 @@
                                                 <i class="mdi mdi-file-pdf text-danger"></i> Export</a>
                                             <a href="{{ url('admin/quotations/mail', $quotation->id) }}"
                                                 class="btn btn-light text-capitalize" data-mdb-ripple-color="dark">
-                                                <i class="mdi mdi-file-pdf text-danger"></i> send mail</a>
+                                                <i class="mdi mdi-email text-danger"></i> send mail</a>
                                         </div>
                                     </div>
                                     <hr>

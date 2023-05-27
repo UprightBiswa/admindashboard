@@ -83,5 +83,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         Route::get('/invoices/pdf/{invoice}', 'pdf');
         Route::get('/invoices/{invoice}/payment', 'paymentDetails');
         Route::post('/invoices/{invoice}/payment', 'submitPayment');
+        Route::get('/invoices/mail/{invoice}', 'mailInvoice');
+
     });
 });

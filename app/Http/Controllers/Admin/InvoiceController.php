@@ -6,10 +6,12 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Service;
 use App\Models\Customer;
+use App\Mail\InvoiceEmail;
 use App\Models\InvoiceItem;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 
 class InvoiceController extends Controller
 {
@@ -278,5 +280,25 @@ class InvoiceController extends Controller
 
         return redirect('admin/invoices')
             ->with('message', 'Payment submitted successfully.');
+    }
+    public function mailInvoice(Invoice $invoice)
+    {
+        $prefix = 'TCPIPL/IN/';
+        $count = Invoice::where('id', '<=', $invoice->id)->count();
+        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $invoiceId = $prefix . $formattedCount;
+        $subtotal = $invoice->total_amount;
+
+        $customerEmail = $invoice->customer->email;
+
+        $mail = new InvoiceEmail($invoice, $invoiceId, $subtotal);
+
+        Mail::to($customerEmail)->send($mail);
+
+        if(Mail::failures()){
+            return redirect('admin/invoices')->with('message', 'Failed to send invocie email');
+        }
+
+        return redirect('admin/invoices')->with('message', 'Invocie email sent to : ' . $invoice->customer->email);
     }
 }
