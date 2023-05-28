@@ -33,11 +33,11 @@ class InvoiceController extends Controller
         //         $totalTaxRate += $service->tax_rate;
         //     }
         // }
-
+        $prefix = 'TCPIPL/IN/';
         $invoices  = Invoice::paginate(5);
         $invoiceItem = InvoiceItem::paginate(5);
 
-        return view('Admin.invoices.index', compact('invoices', 'invoiceItem', ));
+        return view('Admin.invoices.index', compact('invoices', 'invoiceItem', 'prefix'));
     }
 
     /**
@@ -131,8 +131,10 @@ class InvoiceController extends Controller
     {
         $prefix = 'TCPIPL/IN/';
         $count = Invoice::where('id', '<=', $invoice->id)->count();
-        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $formattedCount = str_pad($invoice->id, 5, '0', STR_PAD_LEFT);
         $invoiceId = $prefix . $formattedCount;
+
+
         $subtotal = $invoice->total_amount;
 
         return view('Admin.invoices.show', compact('invoice', 'invoiceId', 'subtotal'));
@@ -244,21 +246,22 @@ class InvoiceController extends Controller
     {
         $prefix = 'TCPIPL/IN/';
         $count = Invoice::where('id', '<=', $invoice->id)->count();
-        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $formattedCount = str_pad($invoice->id, 5, '0', STR_PAD_LEFT);
         $invoiceId = $prefix . $formattedCount;
+
         $subtotal = $invoice->total_amount;
 
         $customers = Customer::all();
         $services = Service::all();
         $payments = Payment::all();
 
-        return view('Admin.invoices.pdf', compact('invoice', 'customers', 'services', 'payments', 'invoiceId','subtotal'));
+        return view('Admin.invoices.pdf', compact('invoice', 'customers', 'services', 'payments', 'invoiceId', 'subtotal'));
     }
 
     public function paymentDetails(Invoice $invoice)
     {
         $customer = $invoice->customer;
-        return view('admin.payment.details', compact('invoice','customer'));
+        return view('admin.payment.details', compact('invoice', 'customer'));
     }
 
     public function submitPayment(Request $request, Invoice $invoice)
@@ -285,8 +288,9 @@ class InvoiceController extends Controller
     {
         $prefix = 'TCPIPL/IN/';
         $count = Invoice::where('id', '<=', $invoice->id)->count();
-        $formattedCount = str_pad($count, 5, '0', STR_PAD_LEFT);
+        $formattedCount = str_pad($invoice->id, 5, '0', STR_PAD_LEFT);
         $invoiceId = $prefix . $formattedCount;
+
         $subtotal = $invoice->total_amount;
 
         $customerEmail = $invoice->customer->email;
@@ -295,7 +299,7 @@ class InvoiceController extends Controller
 
         Mail::to($customerEmail)->send($mail);
 
-        if(Mail::failures()){
+        if (Mail::failures()) {
             return redirect('admin/invoices')->with('message', 'Failed to send invocie email');
         }
 

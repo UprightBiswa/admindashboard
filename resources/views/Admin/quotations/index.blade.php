@@ -9,16 +9,17 @@
             <div class="card">
                 <div class="card-header">
                     <h3>Quotation
-                        <a href="{{ url('admin/quotations/create') }}" class="btn btn-sm btn-primary float-end">New
+                        <a href="{{ url('admin/quotations/create') }}" class="btn btn-sm btn-outline-primary float-end">New
                             Quotaion</a>
                     </h3>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="dataTable">
+                        <table class="table table-bordered table-striped" id="recent-purchases-listing">
                             <thead>
                                 <tr>
                                     <th>S No</th>
+                                    <th>QuotationId</th>
                                     <th>Customer Name</th>
                                     <th>Issue Date</th>
                                     <th>Quantity</th>
@@ -30,6 +31,7 @@
                                 @foreach ($quotations as $quotation)
                                     <tr>
                                         <td>{{ $quotations->firstItem() + $loop->index }}</td>
+                                        <td>{{ $prefix . str_pad($quotation->id, 5, '0', STR_PAD_LEFT) }}</td>
                                         <td>{{ $quotation->customer->name }}</td>
                                         <td>{{ $quotation->created_at }}</td>
                                         <td>
@@ -44,14 +46,14 @@
                                         <td>{{ $quotation->total_amount }}</td>
                                         <td>
                                             <a href="{{ url('admin/quotations', $quotation) }}"
-                                                class="btn btn-sm btn-info">View</a>
+                                                class="btn btn-sm btn-outline-info">View</a>
                                             <a href="{{ url('admin/quotations/' . $quotation->id . '/edit') }}"
-                                                class="btn btn-sm btn-primary">Edit</a>
+                                                class="btn btn-sm btn-outline-primary">Edit</a>
                                             <form action="{{ url('admin/quotations', $quotation) }}" method="POST"
                                                 style="display:inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
                                                     onclick="return confirm('Are you sure you want to delete this quotation?')">Delete</button>
                                             </form>
                                         </td>

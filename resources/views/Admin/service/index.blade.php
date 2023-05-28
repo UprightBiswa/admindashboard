@@ -8,12 +8,12 @@
             @endif
             <div class="card">
                 <div class="card-header">
-                    <h5> service <a href="{{ url('admin/services/create') }}" class="btn btn-sm btn-primary float-end">New
+                    <h5> service <a href="{{ url('admin/services/create') }}" class="btn btn-sm btn-outline-primary float-end">New
                             Services</a> </h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="dataTable">
+                        <table class="table table-bordered table-striped" id="recent-purchases-listing">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -31,15 +31,15 @@
                                         <td>{{ $service->price }}</td>
                                         <td>{{ $service->HSN_code }}</td>
                                         <td>
-                                            <a href="{{ url('admin/services', $service) }}" class="mdi mdi-eye me-3 icon-lg text-success"></a>
+                                            <a href="{{ url('admin/services', $service) }}" class="btn btn-sm btn-outline-info">view</a>
                                             <a href="{{ url('admin/services/' . $service->id . '/edit') }}"
-                                                class=" mdi mdi-tooltip-edit me-3 icon-lg text-warning"></a>
+                                                class=" btn btn-sm btn-outline-warning">edit</a>
                                             <form method="POST" action="{{ url('admin/services/' . $service->id) }}"
                                                 class="d-inline-block">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class=" mdi mdi-delete-forever me-3 icon-lg text-danger"
-                                                    onclick="return confirm('Are you sure you want to delete this service?')"></button>
+                                                <button type="submit" class=" btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this service?')">delete</button>
                                             </form>
                                         </td>
                                     </tr>

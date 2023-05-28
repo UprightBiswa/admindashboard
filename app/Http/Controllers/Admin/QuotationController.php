@@ -22,12 +22,16 @@ class QuotationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Quotation $quotation)
     {
+
+        $prefix = 'TCPIPL/QN/';
+
+
         $quotations = Quotation::paginate(5);
         $quotationItems = QuotationItem::paginate(5);
 
-        return view('Admin.quotations.index', compact('quotations', 'quotationItems'));
+        return view('Admin.quotations.index', compact('quotations', 'quotationItems', 'prefix'));
     }
 
     /**

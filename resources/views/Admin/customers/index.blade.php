@@ -15,7 +15,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped" id="dataTable">
+                        <table class="table table-bordered table-striped " id="recent-purchases-listing">
                             <thead>
                                 <tr>
                                     <th>S No</th>

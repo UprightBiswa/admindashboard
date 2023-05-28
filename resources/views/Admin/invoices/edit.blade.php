@@ -144,15 +144,16 @@
             row.querySelector('input[name="amount[]"]').value = discountAmount.toFixed(2);
         }
     </script>
+
     <script>
         function addInvoiceItem() {
-            var invoiceItem = document.getElementById('invoice-items');
-            var rowCount = invoiceItem.rows.length;
-            var row = invoiceItem.insFertRow(rowCount);
+            var invoiceItems = document.getElementById('invoice-items');
+            var rowCount = invoiceItems.rows.length;
+            var row = invoiceItems.insertRow(rowCount);
 
             var cell0 = row.insertCell(0);
             var number = document.createTextNode(rowCount + 1); // use rowCount + 1 to start from 1
-            cell1.appendChild(number);
+            cell0.appendChild(number);
 
             var cell1 = row.insertCell(1);
             var descriptionInput = document.createElement('input');
@@ -160,7 +161,7 @@
             descriptionInput.name = 'descriptions[]';
             descriptionInput.id = 'descriptions';
             descriptionInput.className = 'form-control';
-            cell2.appendChild(descriptionInput);
+            cell1.appendChild(descriptionInput);
 
             var cell2 = row.insertCell(2);
             var serviceSelect = document.createElement('select');
@@ -173,10 +174,10 @@
                 option{{ $service->id }}.text = '{{ $service->name }}';
                 serviceSelect.appendChild(option{{ $service->id }});
             @endforeach
-            cell3.appendChild(serviceSelect);
+            cell2.appendChild(serviceSelect);
 
-           //quantity
-           var cell3 = row.insertCell(3);
+            // quantity
+            var cell3 = row.insertCell(3);
             var quantityInput = document.createElement('input');
             quantityInput.type = 'text';
             quantityInput.name = 'quantity[]';
@@ -187,7 +188,7 @@
             });
             cell3.appendChild(quantityInput);
 
-            //rate
+            // rate
             var cell4 = row.insertCell(4);
             var rateInput = document.createElement('input');
             rateInput.type = 'text';
@@ -199,8 +200,7 @@
             });
             cell4.appendChild(rateInput);
 
-
-            //tax
+            // tax
             var cell5 = row.insertCell(5);
             var taxRateInput = document.createElement('input');
             taxRateInput.type = 'text';
@@ -212,7 +212,7 @@
             });
             cell5.appendChild(taxRateInput);
 
-            //discount
+            // discount
             var cell6 = row.insertCell(6);
             var discountInput = document.createElement('input');
             discountInput.type = 'text';
@@ -222,9 +222,9 @@
             discountInput.addEventListener('input', function() {
                 calculateAmount(this);
             });
-            cell5.appendChild(discountInput);
+            cell6.appendChild(discountInput);
 
-            //amount
+            // amount
             var cell7 = row.insertCell(7);
             var amountInput = document.createElement('input');
             amountInput.type = 'text';
@@ -232,19 +232,19 @@
             amountInput.id = 'amount';
             amountInput.className = 'form-control';
             amountInput.readOnly = true;
-            cell6.appendChild(amountInput);
+            cell7.appendChild(amountInput);
 
-            //delete
+            // delete
             var cell8 = row.insertCell(8);
             var deleteButton = document.createElement('button');
             deleteButton.type = 'button';
             deleteButton.className = 'btn btn-danger';
             deleteButton.onclick = function() {
-                deleteQuotationItem(this)
+                deleteQuotationItem(this);
             };
             var buttonText = document.createTextNode('Delete');
             deleteButton.appendChild(buttonText);
-            cell7.appendChild(deleteButton);
+            cell8.appendChild(deleteButton);
         }
 
         function deleteQuotationItem(btn) {
@@ -255,4 +255,5 @@
         // Call the addInvoiceItem() function once to add the first row with serial number 1
         addInvoiceItem();
     </script>
+
 @endsection

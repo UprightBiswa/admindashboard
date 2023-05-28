@@ -9,13 +9,13 @@
             <div class="card">
                 <div class="card-header">
                     <h5>Invoice
-                        <a href="{{ url('admin/invoices/create') }}" class="btn btn-sm btn-primary float-end">New
+                        <a href="{{ url('admin/invoices/create') }}" class="btn btn-sm btn-outline-primary float-end">New
                             Invoice</a>
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped "  id="recent-purchases-listing">
+                        <table class="table table-bordered table-striped " id="recent-purchases-listing">
                             <thead>
                                 <tr>
                                     <th>S No</th>
@@ -31,6 +31,7 @@
                                 @foreach ($invoices as $invoice)
                                     <tr>
                                         <td>{{ $invoices->firstItem() + $loop->index }}</td>
+                                        <td>{{ $prefix . str_pad($invoice->id, 5, '0', STR_PAD_LEFT) }}</td>
                                         <td>{{ $invoice->customer->name }}</td>
                                         <td>{{ $invoice->created_at }}</td>
                                         <td>
@@ -54,20 +55,20 @@
                                         <td>
                                             @if (!$invoice->payment_status)
                                                 <a
-                                                    href="{{ url('admin/invoices/' . $invoice->id . '/payment') }}"class="btn btn-sm btn-success">Payment</a>
+                                                    href="{{ url('admin/invoices/' . $invoice->id . '/payment') }}"class="btn btn-sm btn-outline-success">Payment</a>
                                                 <a
-                                                    href="{{ url('admin/invoices', $invoice) }}"class="btn btn-sm btn-info">View</a>
+                                                    href="{{ url('admin/invoices', $invoice) }}"class="btn btn-sm btn-outline-info">View</a>
                                                 <a
-                                                    href="{{ url('admin/invoices/' . $invoice->id . '/edit') }}"class="btn btn-sm btn-primary">Edit</a>
+                                                    href="{{ url('admin/invoices/' . $invoice->id . '/edit') }}"class="btn btn-sm btn-outline-primary">Edit</a>
                                             @else
                                                 <a href="{{ url('admin/invoices', $invoice) }}"
-                                                    class="btn btn-sm btn-info">View</a>
+                                                    class="btn btn-sm btn-outline-info">View</a>
                                             @endif
                                             <form action="{{ url('admin/invoices', $invoice) }}" method="POST"
                                                 style="display:inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
                                                     onclick="return confirm('Are you sure you want to delete this invoice?')">Delete</button>
                                             </form>
                                         </td>

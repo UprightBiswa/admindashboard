@@ -59,7 +59,6 @@
                                         <i class="mdi mdi-home text-muted hover-cursor"></i>
                                         <p class="text-primary mb-0 hover-cursor">&nbsp;/&nbsp;{{ request()->path() }}&nbsp;/&nbsp;
                                         </p>
-
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-end flex-wrap">
