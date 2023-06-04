@@ -19,8 +19,9 @@
                             <thead>
                                 <tr>
                                     <th>S No</th>
+                                    <th>InvoiceID</th>
                                     <th>Customer Name</th>
-                                    <th>Issue Date</th>
+                                    {{-- <th>Issue Date</th> --}}
                                     <th>Quantity</th>
                                     <th>Total Amount</th>
                                     <th>Status</th>
@@ -33,7 +34,7 @@
                                         <td>{{ $invoices->firstItem() + $loop->index }}</td>
                                         <td>{{ $prefix . str_pad($invoice->id, 5, '0', STR_PAD_LEFT) }}</td>
                                         <td>{{ $invoice->customer->name }}</td>
-                                        <td>{{ $invoice->created_at }}</td>
+                                        {{-- <td>{{ $invoice->created_at }}</td> --}}
                                         <td>
                                             @php
                                                 $totalQuantity = 0;
